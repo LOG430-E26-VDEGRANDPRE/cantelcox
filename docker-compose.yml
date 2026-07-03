@@ -1,23 +1,85 @@
 services:
-#  store_manager:
-#    build: .
-#    container_name: store_manager
-#    environment:
-#      - PYTHONUNBUFFERED=1
-#    volumes:
-#      - .:/app
-#    ports:
-#      - "5000:5000"
-#    networks:
-#      - cantelcox-network
-#    depends_on:
-#      mysql:
-#        condition: service_healthy
-#      redis:
-#        condition: service_healthy
+
+  # Les fichiers d'initialisation des modules sont collectés localement
+  copie-initdb-services:
+    image: alpine
+    volumes:
+      - ./db-init:/data
+      - ./svc-clients/db-init:/db_clients
+      - ./svc-commandes/db-init:/db_commandes
+    command: >
+      sh -c "cp /db_clients/init.sql /data/init-clients.sql;
+            cp /db_commandes/init.sql /data/init-commandes.sql;"
+
+  mysql:
+    image: mysql:8.4.7
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: cantelcox
+      MYSQL_PASSWORD: RXc9HsR1wuKL7z2sgTd7S1
+    networks:
+      - cantelcox-network
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -proot"]
+      interval: 1m
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: labo01_DEGV03078209
+      MONGO_INITDB_ROOT_PASSWORD: rnoCE4K8t2EWrTGLvh6GVs
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - cantelcox-network
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+    networks:
+      - cantelcox-network
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1m
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+  krakend:
+    image: devopsfaith/krakend:2.7
+    restart: unless-stopped
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config/krakend.json:/etc/krakend/krakend.json
+    networks:
+      - cantelcox-network
+    depends_on:
+      - svc_clients
+      - svc_orchestration
+      - svc_commandes
+      - jaeger
+      - keycloak
 
   prometheus:
     image: prom/prometheus:latest
+    restart: unless-stopped
     container_name: prometheus
     ports:
       - "9090:9090"
@@ -34,54 +96,38 @@ services:
       - cantelcox-network
  #   depends_on:
  #     - store_manager
-
-  mysql:
-    image: mysql:8.4.7
+  grafana:
+    image: grafana/grafana:latest
     restart: unless-stopped
+    container_name: grafana
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: labo05_db
-      MYSQL_USER: labo05
-      MYSQL_PASSWORD: RXc9HsR1wuKL7z2sgTd7S1
-    networks:
-      - labo05-network
+      - GF_LOG_LEVEL=debug
     ports:
-      - "3306:3306"
+      - "3000:3000"
     volumes:
-      - mysql_data:/var/lib/mysql
-      - ./db-init:/docker-entrypoint-initdb.d
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -proot"]
-      interval: 1m
-      timeout: 10s
-      retries: 5
-      start_period: 10s
+      - grafana_data:/var/lib/grafana
+    networks:
+      - cantelcox-network
+    depends_on:
+      - prometheus
 
-  redis:
-    image: redis:7
+  postgres_kc:
+    image: postgres
     restart: unless-stopped
-    networks:
-      - labo05-network
     ports:
-      - "6379:6379"
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 1m
-      timeout: 10s
-      retries: 5
-      start_period: 10s
-
-  krakend:
-    image: devopsfaith/krakend:2.7
-    container_name: api-gateway
-    ports:
-      - "8080:8080"
+      - "5432:5432"
     volumes:
-      - ./config/krakend.json:/etc/krakend/krakend.json
+      - postgres_data:/var/lib/postgres
+    environment:
+      - POSTGRES_PASSWORD=cantelcox
+      - POSTGRES_USER=keycloak
     networks:
-      - labo05-network
-#   depends_on:
-#      - store_manager
+      - cantelcox-network
+
+include:
+  - svc-orchestration/docker-compose.yml
+  - svc-clients/docker-compose.yml
+  - svc-commandes/docker-compose.yml
 
 networks:
   cantelcox-network:
@@ -89,4 +135,7 @@ networks:
 
 volumes:
   mysql_data:
+  mongo_data:
+  postgres_data:
   prometheus_data:
+  grafana_data:

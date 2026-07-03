@@ -1,13 +1,13 @@
 {
   "version": 3,
-  "name": "Store Manager API Gateway",
+  "name": "CanTelcoX API Gateway",
   "timeout": "5s",
   "cache_ttl": "300s",
   "output_encoding": "json",
   "port": 8080,
   "extra_config": {
     "telemetry/opentelemetry": {
-      "service_name": "krakend-gateway",
+      "service_name": "krakend-api-gateway",
       "service_version": "1.0.0",
       "exporters": {
         "otlp": [
@@ -23,25 +23,83 @@
   },
   "endpoints": [
     {
-      "endpoint": "/store-manager-api/orders",
+      "endpoint": "/clients/party",
       "method": "POST",
       "input_headers": ["*"],
       "backend": [
         {
-          "url_pattern": "/orders",
-          "host": ["http://store_manager:5000"],
+          "url_pattern": "/party",
+          "host": ["http://svc_clients:5000"],
           "timeout": "5s"
         }
       ]
     },
     {
-      "endpoint": "/store-manager-api/orders/{order_id}",
-      "method": "DELETE",
+      "endpoint": "/clients/auth",
+      "method": "POST",
       "input_headers": ["*"],
       "backend": [
         {
+          "url_pattern": "/auth",
+          "host": ["http://svc_clients:5000"],
+          "timeout": "5s"
+        }
+      ]
+    },
+    {
+      "endpoint": "/clients/party/{party_id}",
+      "method": "GET",
+      "input_headers": ["*"],
+      "output_encoding": "json",
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/cantelcox/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/party/{party_id}",
+          "host": ["http://svc_clients:5000"],
+          "timeout": "5s"
+        }
+      ]
+    },
+    {
+      "endpoint": "/commandes/orders",
+      "method": "POST",
+      "input_headers": ["*"],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/cantelcox/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/orders",
+          "host": ["http://svc_commandes:5000"],
+          "timeout": "5s"
+        }
+      ]
+    },
+    {
+      "endpoint": "/commandes/orders/{order_id}",
+      "method": "DELETE",
+      "input_headers": ["*"],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/cantelcox/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      },
+      "backend": [
+        {
           "url_pattern": "/orders/{order_id}",
-          "host": ["http://store_manager:5000"],
+          "host": ["http://svc_commandes:5000"],
           "timeout": "5s"
         }
       ]
@@ -59,13 +117,20 @@
       ]
     },
     {
-      "endpoint": "/store-manager-api/orders/{order_id}",
+      "endpoint": "/commande/orders/{order_id}",
       "method": "GET",
       "input_headers": ["*"],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/cantelcox/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      },
       "backend": [
         {
           "url_pattern": "/orders/{order_id}",
-          "host": ["http://store_manager:5000"],
+          "host": ["http://svc_commandes:5000"],
           "timeout": "5s"
         }
       ]
@@ -95,13 +160,39 @@
       ]
     },
     {
-      "endpoint": "/store-manager-api/orders",
+      "endpoint": "/commandes-api/orders",
       "method": "PUT",
       "input_headers": ["*"],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/cantelcox/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      },
       "backend": [
         {
           "url_pattern": "/orders",
-          "host": ["http://store_manager:5000"],
+          "host": ["http://svc_commandes:5000"],
+          "timeout": "5s"
+        }
+      ]
+    },
+    {
+      "endpoint": "/saga/commande",
+      "method": "POST",
+      "input_headers": ["*"],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/cantelcox/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/orders",
+          "host": ["http://svc_orchestration:5000"],
           "timeout": "5s"
         }
       ]
