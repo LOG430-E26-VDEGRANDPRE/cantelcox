@@ -1,2 +1,4 @@
 svc-*
 __pycache__
+db-init/init-clients.sql
+db-init/init-commandes.sql
