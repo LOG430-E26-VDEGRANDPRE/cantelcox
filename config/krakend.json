@@ -179,7 +179,7 @@
       ]
     },
     {
-      "endpoint": "/saga/commande",
+      "endpoint": "/orchestration/commande",
       "method": "POST",
       "input_headers": ["*"],
       "extra_config": {
