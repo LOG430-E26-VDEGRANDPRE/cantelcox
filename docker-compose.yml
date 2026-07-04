@@ -18,6 +18,10 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: cantelcox
       MYSQL_PASSWORD: RXc9HsR1wuKL7z2sgTd7S1
+    command: [
+      '--character-set-server=utf8mb4',
+      '--collation-server=utf8mb4_unicode_ci'
+    ]
     networks:
       - cantelcox-network
     ports:
