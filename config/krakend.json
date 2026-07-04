@@ -9,15 +9,20 @@
     "telemetry/opentelemetry": {
       "service_name": "krakend-api-gateway",
       "service_version": "1.0.0",
-      "exporters": {
-        "otlp": [
-          {
-            "name": "jaeger",
-            "host": "jaeger",
-            "port": 4317,
-            "use_http": false
-          }
-        ]
+      "traces": {
+        "exporters": {
+          "otlp": [
+            {
+              "name": "jaeger",
+              "host": "jaeger",
+              "port": 4317,
+              "endpoint": "/v1/traces"
+            }
+          ]
+        }
+      },
+      "metrics": {
+        "disabled": true
       }
     }
   },
@@ -141,8 +146,27 @@
       },
       "backend": [
         {
-          "url_pattern": "/orders",
-          "host": ["http://svc_orchestration:5000"],
+          "url_pattern": "/saga/order",
+          "host": ["http://svc_orchestration:5123"],
+          "timeout": "5s"
+        }
+      ]
+    },
+    {
+      "endpoint": "/catalogue/productofferings/{references}",
+      "method": "POST",
+      "input_headers": ["*"],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/cantelcox/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/productoffering/{references}",
+          "host": ["http://svc_catalogue:5000"],
           "timeout": "5s"
         }
       ]

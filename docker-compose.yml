@@ -31,10 +31,10 @@ services:
       - ./db-init:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -proot"]
-      interval: 1m
+      interval: 5s
       timeout: 10s
-      retries: 5
-      start_period: 10s
+      retries: 10
+      start_period: 1s
 
   mongo:
     image: mongo:6
