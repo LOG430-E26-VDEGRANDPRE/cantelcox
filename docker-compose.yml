@@ -7,9 +7,11 @@ services:
       - ./db-init:/data
       - ./svc-clients/db-init:/db_clients
       - ./svc-commandes/db-init:/db_commandes
+      - ./svc-catalogue/init-scripts:/db_catalogue
     command: >
       sh -c "cp /db_clients/init.sql /data/init-clients.sql;
-            cp /db_commandes/init.sql /data/init-commandes.sql;"
+            cp /db_commandes/init.sql /data/init-commandes.sql;
+            cp /db_catalogue/*.js /data/;"
 
   mysql:
     image: mysql:8.4.7
@@ -43,8 +45,8 @@ services:
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: labo01_DEGV03078209
-      MONGO_INITDB_ROOT_PASSWORD: rnoCE4K8t2EWrTGLvh6GVs
+      MONGO_INITDB_ROOT_USERNAME: mongo_cantelcox
+      MONGO_INITDB_ROOT_PASSWORD: cantelcox
     volumes:
       - mongo_data:/data/db
     networks:
@@ -132,6 +134,7 @@ include:
   - svc-orchestration/docker-compose.yml
   - svc-clients/docker-compose.yml
   - svc-commandes/docker-compose.yml
+  - svc-catalogue/docker-compose.yml
 
 networks:
   cantelcox-network:
