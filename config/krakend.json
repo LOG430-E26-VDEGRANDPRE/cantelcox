@@ -165,7 +165,7 @@
       ]
     },
     {
-      "endpoint": "/facturation/client/{customerbill_id}",
+      "endpoint": "/facturation/{customerbill_id}",
       "method": "GET",
       "input_headers": ["*"],
       "extra_config": {
@@ -178,6 +178,25 @@
       "backend": [
         {
           "url_pattern": "/customerbills/{customerbill_id}",
+          "host": ["http://svc_facturation:5000"],
+          "timeout": "5s"
+        }
+      ]
+    },
+    {
+      "endpoint": "/facturation/client/{customerbill_id}",
+      "method": "GET",
+      "input_headers": ["*"],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/cantelcox/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/customerbills/party/{customerbill_id}",
           "host": ["http://svc_facturation:5000"],
           "timeout": "5s"
         }
