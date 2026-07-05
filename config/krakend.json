@@ -153,16 +153,21 @@
       ]
     },
     {
-      "endpoint": "/catalogue/productofferings/{references}",
-      "method": "POST",
+      "endpoint": "/catalogue/offres",
+      "method": "GET",
       "input_headers": ["*"],
-      "extra_config": {
-        "auth/validator": {
-          "alg": "RS256",
-          "jwk_url": "http://keycloak:8080/realms/cantelcox/protocol/openid-connect/certs",
-          "disable_jwk_security": true
+      "backend": [
+        {
+          "url_pattern": "/productofferings",
+          "host": ["http://svc_catalogue:5000"],
+          "timeout": "5s"
         }
-      },
+      ]
+    },
+    {
+      "endpoint": "/catalogue/offres/{references}",
+      "method": "GET",
+      "input_headers": ["*"],
       "backend": [
         {
           "url_pattern": "/productoffering/{references}",

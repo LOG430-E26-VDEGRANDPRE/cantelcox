@@ -5,13 +5,14 @@ services:
     image: alpine
     volumes:
       - ./db-init:/data
+      - ./db-scripts:/scripts
       - ./svc-clients/db-init:/db_clients
       - ./svc-commandes/db-init:/db_commandes
       - ./svc-catalogue/init-scripts:/db_catalogue
     command: >
       sh -c "cp /db_clients/init.sql /data/init-clients.sql;
             cp /db_commandes/init.sql /data/init-commandes.sql;
-            cp /db_catalogue/*.js /data/;"
+            cp /db_catalogue/*.js /scripts/;"
 
   mysql:
     image: mysql:8.4.7
@@ -47,8 +48,10 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongo_cantelcox
       MONGO_INITDB_ROOT_PASSWORD: cantelcox
+      MONGO_INITDB_DATABASE: cantelcox
     volumes:
       - mongo_data:/data/db
+      - ./db-scripts:/docker-entrypoint-initdb.d
     networks:
       - cantelcox-network
 
