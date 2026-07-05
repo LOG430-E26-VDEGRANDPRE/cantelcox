@@ -91,18 +91,6 @@
       ]
     },
     {
-      "endpoint": "/store-manager-api/stocks",
-      "method": "PUT",
-      "input_headers": ["*"],
-      "backend": [
-        {
-          "url_pattern": "/stocks",
-          "host": ["http://store_manager:5000"],
-          "timeout": "5s"
-        }
-      ]
-    },
-    {
       "endpoint": "/commandes/orders/{order_id}",
       "method": "GET",
       "input_headers": ["*"],
@@ -122,13 +110,13 @@
       ]
     },
     {
-      "endpoint": "/facturation/payments/{payment_id}",
-      "method": "POST",
+      "endpoint": "/facturation/paiement/{payment_id}",
+      "method": "PATCH",
       "input_headers": ["*"],
       "backend": [
         {
           "url_pattern": "/payments/process/{payment_id}",
-          "host": ["http://payments_api:5009"],
+          "host": ["http://svc_facturation:5000"],
           "timeout": "5s"
         }
       ]
@@ -172,6 +160,44 @@
         {
           "url_pattern": "/productoffering/{references}",
           "host": ["http://svc_catalogue:5000"],
+          "timeout": "5s"
+        }
+      ]
+    },
+    {
+      "endpoint": "/facturation/client/{customerbill_id}",
+      "method": "GET",
+      "input_headers": ["*"],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/cantelcox/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/customerbills/{customerbill_id}",
+          "host": ["http://svc_facturation:5000"],
+          "timeout": "5s"
+        }
+      ]
+    },
+    {
+      "endpoint": "/facturation/paiement",
+      "method": "POST",
+      "input_headers": ["*"],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/cantelcox/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/payments",
+          "host": ["http://svc_facturation:5000"],
           "timeout": "5s"
         }
       ]

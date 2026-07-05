@@ -8,11 +8,15 @@ services:
       - ./db-scripts:/scripts
       - ./svc-clients/db-init:/db_clients
       - ./svc-commandes/db-init:/db_commandes
-      - ./svc-catalogue/init-scripts:/db_catalogue
+      - ./svc-facturation/db-init:/db_facturation
+      - ./svc-facturation/init-scripts:/scripts_facturation
+      - ./svc-catalogue/init-scripts:/scripts_catalogue
     command: >
       sh -c "cp /db_clients/init.sql /data/init-clients.sql;
             cp /db_commandes/init.sql /data/init-commandes.sql;
-            cp /db_catalogue/*.js /scripts/;"
+            cp /db_facturation/init.sql /data/init-facturation.sql;
+            cp /scripts_catalogue/*.js /scripts/;
+            cp /scripts_facturation/*.js /scripts/;"
 
   mysql:
     image: mysql:8.4.7
@@ -54,6 +58,12 @@ services:
       - ./db-scripts:/docker-entrypoint-initdb.d
     networks:
       - cantelcox-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping').ok", "--quiet"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
 
   redis:
     image: redis:7
@@ -138,6 +148,7 @@ include:
   - svc-clients/docker-compose.yml
   - svc-commandes/docker-compose.yml
   - svc-catalogue/docker-compose.yml
+  - svc-facturation/docker-compose.yml
 
 networks:
   cantelcox-network:

@@ -31,7 +31,8 @@ CREATE TABLE products (
     price DECIMAL(10,2) NOT NULL,
     serviceRef VARCHAR(150),
     type ENUM('produit','service'),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_billed BIT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Order items
