@@ -149,6 +149,7 @@ include:
   - svc-commandes/docker-compose.yml
   - svc-catalogue/docker-compose.yml
   - svc-facturation/docker-compose.yml
+  - svc-lignes/docker-compose.yml
 
 networks:
   cantelcox-network:

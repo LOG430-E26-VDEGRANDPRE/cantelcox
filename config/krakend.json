@@ -28,31 +28,31 @@
   },
   "endpoints": [
     {
-      "endpoint": "/clients/party",
+      "endpoint": "/clients/v1/party",
       "method": "POST",
       "input_headers": ["*"],
       "backend": [
         {
-          "url_pattern": "/party",
+          "url_pattern": "/v1/party",
           "host": ["http://svc_clients:5000"],
           "timeout": "5s"
         }
       ]
     },
     {
-      "endpoint": "/clients/auth",
+      "endpoint": "/clients/v1/auth",
       "method": "POST",
       "input_headers": ["*"],
       "backend": [
         {
-          "url_pattern": "/auth",
+          "url_pattern": "/v1/auth",
           "host": ["http://svc_clients:5000"],
           "timeout": "5s"
         }
       ]
     },
     {
-      "endpoint": "/clients/party/{party_id}",
+      "endpoint": "/clients/v1/party/{party_id}",
       "method": "GET",
       "input_headers": ["*"],
       "output_encoding": "json",
@@ -65,14 +65,14 @@
       },
       "backend": [
         {
-          "url_pattern": "/party/{party_id}",
+          "url_pattern": "/v1/party/{party_id}",
           "host": ["http://svc_clients:5000"],
           "timeout": "5s"
         }
       ]
     },
     {
-      "endpoint": "/commandes/orders",
+      "endpoint": "/commandes/v1/orders",
       "method": "POST",
       "input_headers": ["*"],
       "extra_config": {
@@ -84,14 +84,14 @@
       },
       "backend": [
         {
-          "url_pattern": "/orders",
+          "url_pattern": "/v1/orders",
           "host": ["http://svc_commandes:5000"],
           "timeout": "5s"
         }
       ]
     },
     {
-      "endpoint": "/commandes/orders/{order_id}",
+      "endpoint": "/commandes/v1/orders/{order_id}",
       "method": "GET",
       "input_headers": ["*"],
       "extra_config": {
@@ -103,26 +103,26 @@
       },
       "backend": [
         {
-          "url_pattern": "/orders/{order_id}",
+          "url_pattern": "/v1/orders/{order_id}",
           "host": ["http://svc_commandes:5000"],
           "timeout": "5s"
         }
       ]
     },
     {
-      "endpoint": "/facturation/paiement/{payment_id}",
+      "endpoint": "/facturation/v1/paiement/{payment_id}",
       "method": "PATCH",
       "input_headers": ["*"],
       "backend": [
         {
-          "url_pattern": "/payments/process/{payment_id}",
+          "url_pattern": "/v1/payments/process/{payment_id}",
           "host": ["http://svc_facturation:5000"],
           "timeout": "5s"
         }
       ]
     },
     {
-      "endpoint": "/orchestration/commande",
+      "endpoint": "/orchestration/v1/commande",
       "method": "POST",
       "input_headers": ["*"],
       "extra_config": {
@@ -134,38 +134,38 @@
       },
       "backend": [
         {
-          "url_pattern": "/saga/order",
+          "url_pattern": "/v1/saga/order",
           "host": ["http://svc_orchestration:5123"],
           "timeout": "5s"
         }
       ]
     },
     {
-      "endpoint": "/catalogue/offres",
+      "endpoint": "/catalogue/v1/offres",
       "method": "GET",
       "input_headers": ["*"],
       "backend": [
         {
-          "url_pattern": "/productofferings",
+          "url_pattern": "/v1/productofferings",
           "host": ["http://svc_catalogue:5000"],
           "timeout": "5s"
         }
       ]
     },
     {
-      "endpoint": "/catalogue/offres/{references}",
+      "endpoint": "/catalogue/v1/offres/{references}",
       "method": "GET",
       "input_headers": ["*"],
       "backend": [
         {
-          "url_pattern": "/productoffering/{references}",
+          "url_pattern": "/v1/productoffering/{references}",
           "host": ["http://svc_catalogue:5000"],
           "timeout": "5s"
         }
       ]
     },
     {
-      "endpoint": "/facturation/{customerbill_id}",
+      "endpoint": "/facturation/v1/customerbill/{customerbill_id}",
       "method": "GET",
       "input_headers": ["*"],
       "extra_config": {
@@ -177,14 +177,14 @@
       },
       "backend": [
         {
-          "url_pattern": "/customerbills/{customerbill_id}",
+          "url_pattern": "/v1/customerbills/{customerbill_id}",
           "host": ["http://svc_facturation:5000"],
           "timeout": "5s"
         }
       ]
     },
     {
-      "endpoint": "/facturation/client/{customerbill_id}",
+      "endpoint": "/facturation/v1/client/{customerbill_id}",
       "method": "GET",
       "input_headers": ["*"],
       "extra_config": {
@@ -196,14 +196,14 @@
       },
       "backend": [
         {
-          "url_pattern": "/customerbills/party/{customerbill_id}",
+          "url_pattern": "/v1/customerbills/party/{customerbill_id}",
           "host": ["http://svc_facturation:5000"],
           "timeout": "5s"
         }
       ]
     },
     {
-      "endpoint": "/facturation/paiement",
+      "endpoint": "/facturation/v1/paiement",
       "method": "POST",
       "input_headers": ["*"],
       "extra_config": {
@@ -215,7 +215,7 @@
       },
       "backend": [
         {
-          "url_pattern": "/payments",
+          "url_pattern": "/v1/payments",
           "host": ["http://svc_facturation:5000"],
           "timeout": "5s"
         }

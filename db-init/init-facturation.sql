@@ -28,6 +28,7 @@ CREATE TABLE customerbills (
     next_bill_date DATETIME,
     remaining_amount DECIMAL(12,2) NOT NULL DEFAULT 0,
     bill_status ENUM ('DUE','PAID','CANCELED') NOT NULL DEFAULT 'DUE',
+    payment_link VARCHAR(150),
     FOREIGN KEY (billcycle_id) REFERENCES billcycles(id),
     PRIMARY KEY (id, partyRef, billcycle_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
