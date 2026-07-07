@@ -129,7 +129,7 @@ jobs:
                 ;;
             esac
 
-            docker build -t cantelcox/$service:latest .
+            docker build -t vdegrandpre/$service:latest .
 
             # Vérifier si des tests existent
             if [ -f "requirements.txt" ]; then
