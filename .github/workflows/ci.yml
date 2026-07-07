@@ -51,6 +51,43 @@ jobs:
         sudo chmod +x /usr/local/bin/docker-compose
 
     - name: Build and test services
+      env:
+        MONGODB_HOST: ${{ secrets.MONGODB_HOST }}
+        MONGO_DB_NAME: ${{ secrets.MONGO_DB_NAME }}
+        MONGO_DB_USERNAME: ${{ secrets.MONGO_DB_USERNAME }}
+        MONGO_DB_PASSWORD: ${{ secrets.MONGO_DB_PASSWORD }}
+        DB_RESULT_MAX_LIMIT: ${{ secrets.DB_RESULT_MAX_LIMIT }}
+        MYSQL_DB_HOST: ${{ secrets.MYSQL_DB_HOST }}
+        MYSQL_DB_PORT: ${{ secrets.MYSQL_DB_PORT }}
+        MYSQL_DB_USER: ${{ secrets.MYSQL_DB_USER }}
+        MYSQL_DB_PASSWORD: ${{ secrets.MYSQL_DB_PASSWORD }}
+        MYSQL_DB_NAME_PARTY: ${{ secrets.MYSQL_DB_NAME_PARTY }}
+        KC_ADMIN_USER: ${{ secrets.KC_ADMIN_USER }}
+        KC_ADMIN_PASSWORD: ${{ secrets.KC_ADMIN_PASSWORD }}
+        KC_URL: ${{ secrets.KC_URL }}
+        KC_PUBLIC_URL: ${{ secrets.KC_PUBLIC_URL }}
+        KC_REALM: ${{ secrets.KC_REALM }}
+        KC_CLIENT_ID: ${{ secrets.KC_CLIENT_ID }}
+        MYSQL_DB_NAME_ORDER: ${{ secrets.MYSQL_DB_NAME_ORDER }}
+        REDIS_HOST: ${{ secrets.REDIS_HOST }}
+        REDIS_PORT: ${{ secrets.REDIS_PORT }}
+        REDIS_DB_COMMANDES: ${{ secrets.REDIS_DB_COMMANDES }}
+        API_GATEWAY_URL: ${{ secrets.API_GATEWAY_URL }}
+        MYSQL_DB_NAME_CUSTOMERBILL: ${{ secrets.MYSQL_DB_NAME_CUSTOMERBILL }}
+        REDIS_DB_CUSTOMERBILL: ${{ secrets.REDIS_DB_CUSTOMERBILL }}
+        MONGO_DB_NAME_USAGE: ${{ secrets.MONGO_DB_NAME_USAGE }}
+        MONGO_DB_RESULT_MAX_LIMIT_USAGE: ${{ secrets.MONGO_DB_RESULT_MAX_LIMIT_USAGE }}
+        SAGA_FLASK_PORT: ${{ secrets.SAGA_FLASK_PORT }}
+        FACTURATION_API: ${{ secrets.FACTURATION_API }}
+        CLIENTS_URL: ${{ secrets.CLIENTS_URL }}
+        COMMANDES_URL: ${{ secrets.COMMANDES_URL }}
+        CATALOGUE_URL: ${{ secrets.CATALOGUE_URL }}
+        FACTURATION_URL: ${{ secrets.FACTURATION_URL }}
+        LIGNES_WEBCONSOLE: ${{ secrets.LIGNES_WEBCONSOLE }}
+        LIGNES_UDM: ${{ secrets.LIGNES_UDM }}
+        ADMIN_FREE5GC: ${{ secrets.ADMIN_FREE5GC }}
+        PASSWORD_FREE5GC: ${{ secrets.PASSWORD_FREE5GC }}
+        KC_CLIENT_SECRET: ${{ secrets.KC_CLIENT_SECRET }}
       run: |
         # Liste des services à construire
         SERVICES=("svc-catalogue" "svc-clients" "svc-commandes" "svc-facturation" "svc-orchestration" "svc-lignes")
@@ -67,72 +104,70 @@ jobs:
             # Configurer les variables d'environnement pour chaque service
             case $service in
               "svc-catalogue")
-                echo "MONGODB_HOST=${{ secrets.MONGODB_HOST }}" > .env
-                echo "MONGO_DB_NAME=${{ secrets.MONGO_DB_NAME }}" >> .env
-                echo "DB_USERNAME=${{ secrets.MONGO_DB_USERNAME }}" >> .env
-                echo "DB_PASSWORD=${{ secrets.MONGO_DB_PASSWORD }}" >> .env
-                echo "DB_RESULT_MAX_LIMIT=${{ secrets.DB_RESULT_MAX_LIMIT }}" >> .env
+                echo "MONGODB_HOST=$MONGODB_HOST" > .env
+                echo "MONGO_DB_NAME=$MONGO_DB_NAME" >> .env
+                echo "DB_USERNAME=$MONGO_DB_USERNAME" >> .env
+                echo "DB_PASSWORD=$MONGO_DB_PASSWORD" >> .env
+                echo "DB_RESULT_MAX_LIMIT=$DB_RESULT_MAX_LIMIT" >> .env
                 ;;
               "svc-clients")
-                echo "DB_HOST=${{ secrets.MYSQL_DB_HOST }}" > .env
-                echo "DB_PORT=${{ secrets.MYSQL_DB_PORT }}" >> .env
-                echo "DB_USER=${{ secrets.MYSQL_DB_USER }}" >> .env
-                echo "DB_PASSWORD=${{ secrets.MYSQL_DB_PASSWORD }}" >> .env
-                echo "DB_NAME=${{ secrets.MYSQL_DB_NAME_PARTY }}" >> .env
-                echo "KC_ADMIN_USER=${{ secrets.KC_ADMIN_USER }}" >> .env
-                echo "KC_ADMIN_PASSWORD=${{ secrets.KC_ADMIN_PASSWORD }}" >> .env
-                echo "KC_URL=${{ secrets.KC_URL }}" >> .env
-                echo "KC_PUBLIC_URL=${{ secrets.KC_PUBLIC_URL }}" >> .env
-                echo "KC_REALM=${{ secrets.KC_REALM }}" >> .env
-                echo "KC_CLIENT_ID=${{ secrets.KC_CLIENT_ID }}" >> .env
+                echo "DB_HOST=$MYSQL_DB_HOST" > .env
+                echo "DB_PORT=$MYSQL_DB_PORT" >> .env
+                echo "DB_USER=$MYSQL_DB_USER" >> .env
+                echo "DB_PASSWORD=$MYSQL_DB_PASSWORD" >> .env
+                echo "DB_NAME=$MYSQL_DB_NAME_PARTY" >> .env
+                echo "KC_ADMIN_USER=$KC_ADMIN_USER" >> .env
+                echo "KC_ADMIN_PASSWORD=$KC_ADMIN_PASSWORD" >> .env
+                echo "KC_URL=$KC_URL" >> .env
+                echo "KC_PUBLIC_URL=$KC_PUBLIC_URL" >> .env
+                echo "KC_REALM=$KC_REALM" >> .env
+                echo "KC_CLIENT_ID=$KC_CLIENT_ID" >> .env
                 ;;
               "svc-commandes")
-                echo "DB_HOST=${{ secrets.MYSQL_DB_HOST }}" > .env
-                echo "DB_PORT=${{ secrets.MYSQL_DB_PORT }}" >> .env
-                echo "DB_USER=${{ secrets.MYSQL_DB_USER }}" >> .env
-                echo "DB_PASSWORD=${{ secrets.MYSQL_DB_PASSWORD }}" >> .env
-                echo "DB_NAME=${{ secrets.MYSQL_DB_NAME_ORDER }}" >> .env
-                echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
-                echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
-                echo "REDIS_DB=${{ secrets.REDIS_DB_COMMANDES }}" >> .env
-                echo "API_GATEWAY_URL=${{ secrets.API_GATEWAY_URL }}" >> .env
+                echo "DB_HOST=$MYSQL_DB_HOST" > .env
+                echo "DB_PORT=$MYSQL_DB_PORT" >> .env
+                echo "DB_USER=$MYSQL_DB_USER" >> .env
+                echo "DB_PASSWORD=$MYSQL_DB_PASSWORD" >> .env
+                echo "DB_NAME=$MYSQL_DB_NAME_ORDER" >> .env
+                echo "REDIS_HOST=$REDIS_HOST" >> .env
+                echo "REDIS_PORT=$REDIS_PORT" >> .env
+                echo "REDIS_DB=$REDIS_DB_COMMANDES" >> .env
+                echo "API_GATEWAY_URL=$API_GATEWAY_URL" >> .env
                 ;;
               "svc-facturation")
-                echo "DB_HOST=${{ secrets.MYSQL_DB_HOST }}" > .env
-                echo "DB_PORT=${{ secrets.MYSQL_DB_PORT }}" >> .env
-                echo "DB_USER=${{ secrets.MYSQL_DB_USER }}" >> .env
-                echo "DB_PASSWORD=${{ secrets.MYSQL_DB_PASSWORD }}" >> .env
-                echo "DB_NAME=${{ secrets.MYSQL_DB_NAME_CUSTOMERBILL }}" >> .env
-                echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
-                echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
-                echo "REDIS_DB=${{ secrets.REDIS_DB_CUSTOMERBILL }}" >> .env
-                echo "API_GATEWAY_URL=${{ secrets.API_GATEWAY_URL }}" >> .env
-                echo "MONGODB_HOST=${{ secrets.MONGODB_HOST }}" >> .env
-                echo "MONGO_DB_NAME=${{ secrets.MONGO_DB_NAME }}" >> .env
-                echo "MONGO_DB_USERNAME=${{ secrets.MONGO_DB_USERNAME }}" >> .env
-                echo "MONGO_DB_PASSWORD=${{ secrets.MONGO_DB_PASSWORD }}" >> .env
-                echo "MONGO_DB_RESULT_MAX_LIMIT=${{ secrets.MONGO_DB_RESULT_MAX_LIMIT_USAGE }}" >> .env
+                echo "DB_HOST=$MYSQL_DB_HOST" > .env
+                echo "DB_PORT=$MYSQL_DB_PORT" >> .env
+                echo "DB_USER=$MYSQL_DB_USER" >> .env
+                echo "DB_PASSWORD=$MYSQL_DB_PASSWORD" >> .env
+                echo "DB_NAME=$MYSQL_DB_NAME_CUSTOMERBILL" >> .env
+                echo "REDIS_HOST=$REDIS_HOST" >> .env
+                echo "REDIS_PORT=$REDIS_PORT" >> .env
+                echo "REDIS_DB=$REDIS_DB_CUSTOMERBILL" >> .env
+                echo "API_GATEWAY_URL=$API_GATEWAY_URL" >> .env
+                echo "MONGODB_HOST=$MONGODB_HOST" >> .env
+                echo "MONGO_DB_NAME=$MONGO_DB_NAME_USAGE" >> .env
+                echo "MONGO_DB_USERNAME=$MONGO_DB_USERNAME" >> .env
+                echo "MONGO_DB_PASSWORD=$MONGO_DB_PASSWORD" >> .env
+                echo "MONGO_DB_RESULT_MAX_LIMIT=$MONGO_DB_RESULT_MAX_LIMIT_USAGE" >> .env
                 ;;
               "svc-orchestration")
-                echo "FLASK_PORT=${{ secrets.SAGA_FLASK_PORT }}" > .env
-                echo "API_GATEWAY_URL=${{ secrets.API_GATEWAY_URL }}" >> .env
-                echo "FACTURATION_API=${{ secrets.FACTURATION_API }}" >> .env
-                echo "CLIENTS_URL=${{ secrets.CLIENTS_URL }}" >> .env
-                echo "COMMANDES_URL=${{ secrets.COMMANDES_URL }}" >> .env
-                echo "CATALOGUE_URL=${{ secrets.CATALOGUE_URL }}" >> .env
-                echo "FACTURATION_URL=${{ secrets.FACTURATION_URL }}" >> .env
-                echo "LIGNES_WEBCONSOLE=${{ secrets.LIGNES_WEBCONSOLE }}" >> .env
-                echo "LIGNES_UDM=${{ secrets.LIGNES_UDM }}" >> .env
-                echo "ADMIN_FREE5GC=${{ secrets.ADMIN_FREE5GC }}" >> .env
-                echo "PASSWORD_FREE5GC=${{ secrets.PASSWORD_FREE5GC }}" >> .env
-                echo "KC_CLIENT_ID=${{ secrets.KC_CLIENT_ID }}" >> .env
-                echo "KC_REALM=${{ secrets.KC_REALM }}" >> .env
-                echo "KC_CLIENT_SECRET=${{ secrets.KC_CLIENT_SECRET }}" >> .env
-                echo "KC_URL=${{ secrets.KC_URL }}" >> .env
+                echo "FLASK_PORT=$SAGA_FLASK_PORT" > .env
+                echo "API_GATEWAY_URL=$API_GATEWAY_URL" >> .env
+                echo "FACTURATION_API=$FACTURATION_API" >> .env
+                echo "CLIENTS_URL=$CLIENTS_URL" >> .env
+                echo "COMMANDES_URL=$COMMANDES_URL" >> .env
+                echo "CATALOGUE_URL=$CATALOGUE_URL" >> .env
+                echo "FACTURATION_URL=$FACTURATION_URL" >> .env
+                echo "LIGNES_WEBCONSOLE=$LIGNES_WEBCONSOLE" >> .env
+                echo "LIGNES_UDM=$LIGNES_UDM" >> .env
+                echo "ADMIN_FREE5GC=$ADMIN_FREE5GC" >> .env
+                echo "PASSWORD_FREE5GC=$PASSWORD_FREE5GC" >> .env
+                echo "KC_CLIENT_ID=$KC_CLIENT_ID" >> .env
+                echo "KC_REALM=$KC_REALM" >> .env
+                echo "KC_CLIENT_SECRET=$KC_CLIENT_SECRET" >> .env
+                echo "KC_URL=$KC_URL" >> .env
                 ;;
             esac
-
-            cat .env
 
             docker build -t vdegrandpre/$service:latest .
 
