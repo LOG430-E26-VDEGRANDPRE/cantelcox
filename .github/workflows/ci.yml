@@ -167,7 +167,7 @@ jobs:
   deploy:
     name: Deploy
     needs: build-and-test
-    runs-on: [self-hosted, Linux, X64, deploy]
+    runs-on: self-hosted
 
     steps:
     - name: Checkout code
