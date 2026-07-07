@@ -1,7 +1,7 @@
 # CanTelcoX - Système de Gestion pour Opérateur Mobile Canadien
 
 **École de technologie supérieure (ÉTS) - LOG430 - Été 2026**
-**Auteur : Vincent de Grandpré, DEGV03078209**
+**Auteur : Vincent de Grandpré**
 
 ## Aperçu du Projet
 
