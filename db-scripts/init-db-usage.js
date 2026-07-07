@@ -1,5 +1,5 @@
 print("Importation de la base de donnée initiale des usages")
-db = db.getSiblingDB('cantelcox');
+db = db.getSiblingDB('usages');
 db.createCollection('usages')
 /*
 db.productofferings.insertMany([

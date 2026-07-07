@@ -1,5 +1,5 @@
 print("Importation de la base de donnée initiale du catalogue")
-db = db.getSiblingDB('cantelcox');
+db = db.getSiblingDB('productofferings');
 db.createCollection('productofferings')
 db.productofferings.insertMany([
   { "_id": "yHzk18y9AsTrb5crwWSV0vaO", name: "SMGA54", description: "Samsung A54", productOfferingPrice: 299.99, version: "1.0", validFor: '', lifecycleStatus: 'RUNNING', stock: 100, characteristics: {isService: false, billingCycle: 'once'} },
