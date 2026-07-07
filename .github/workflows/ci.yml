@@ -17,8 +17,22 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        submodules: recursive
+
+    - name: Clone subprojects
+      run: |
+        # Liste des sous-projets à cloner
+        declare -A REPOS=(
+          ["svc-catalogue"]="https://github.com/LOG430-E26-VDEGRANDPRE/svc-catalogue.git"
+          ["svc-clients"]="https://github.com/LOG430-E26-VDEGRANDPRE/svc-clients.git"
+          ["svc-commandes"]="https://github.com/LOG430-E26-VDEGRANDPRE/svc-commandes.git"
+          ["svc-facturation"]="https://github.com/LOG430-E26-VDEGRANDPRE/svc-facturation.git"
+          ["svc-orchestration"]="https://github.com/LOG430-E26-VDEGRANDPRE/svc-orchestration.git"
+        )
+
+        for service in "${!REPOS[@]}"; do
+          echo "Cloning $service..."
+          git clone "${REPOS[$service]}" "$service"
+        done
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
@@ -159,8 +173,22 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        submodules: recursive
+
+    - name: Clone subprojects
+      run: |
+        # Liste des sous-projets à cloner
+        declare -A REPOS=(
+          ["svc-catalogue"]="https://github.com/your-org/svc-catalogue.git"
+          ["svc-clients"]="https://github.com/your-org/svc-clients.git"
+          ["svc-commandes"]="https://github.com/your-org/svc-commandes.git"
+          ["svc-facturation"]="https://github.com/your-org/svc-facturation.git"
+          ["svc-orchestration"]="https://github.com/your-org/svc-orchestration.git"
+        )
+
+        for service in "${!REPOS[@]}"; do
+          echo "Cloning $service..."
+          git clone "${REPOS[$service]}" "$service"
+        done
 
     - name: Install Docker Compose
       run: |
