@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 env:
-  DOCKER_COMPOSE_VERSION: 1.29.2
+  DOCKER_COMPOSE_VERSION: 2.24.5
 
 jobs:
   build-and-test:
@@ -46,7 +46,7 @@ jobs:
 
     - name: Install Docker Compose
       run: |
-        sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo curl -L "https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         sudo chmod +x /usr/local/bin/docker-compose
 
     - name: Build and test services
@@ -191,7 +191,7 @@ jobs:
 
     - name: Install Docker Compose
       run: |
-        sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo curl -L "https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         sudo chmod +x /usr/local/bin/docker-compose
 
     - name: Deploy with Docker Compose
