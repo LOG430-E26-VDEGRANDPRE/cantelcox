@@ -167,7 +167,7 @@ jobs:
   deploy:
     name: Deploy
     needs: build-and-test
-    runs-on: [self-hosted]
+    runs-on: self-hosted
 
     steps:
     - name: Checkout code
@@ -177,11 +177,11 @@ jobs:
       run: |
         # Liste des sous-projets à cloner
         declare -A REPOS=(
-          ["svc-catalogue"]="https://github.com/your-org/svc-catalogue.git"
-          ["svc-clients"]="https://github.com/your-org/svc-clients.git"
-          ["svc-commandes"]="https://github.com/your-org/svc-commandes.git"
-          ["svc-facturation"]="https://github.com/your-org/svc-facturation.git"
-          ["svc-orchestration"]="https://github.com/your-org/svc-orchestration.git"
+          ["svc-catalogue"]="https://x-access-token:${{ secrets.PAT }}@://github.com/LOG430-E26-VDEGRANDPRE/svc-catalogue.git"
+          ["svc-clients"]="https://x-access-token:${{ secrets.PAT }}@://github.com/your-org/svc-clients.git"
+          ["svc-commandes"]="https://x-access-token:${{ secrets.PAT }}@://github.com/your-org/svc-commandes.git"
+          ["svc-facturation"]="https://x-access-token:${{ secrets.PAT }}@://github.com/your-org/svc-facturation.git"
+          ["svc-orchestration"]="https://x-access-token:${{ secrets.PAT }}@://github.com/your-org/svc-orchestration.git"
         )
 
         for service in "${!REPOS[@]}"; do
