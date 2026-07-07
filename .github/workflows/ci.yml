@@ -238,6 +238,8 @@ jobs:
     - name: Deploy with Docker Compose
       run: |
         docker network inspect cantelcox-network >/dev/null 2>&1 || docker network create cantelcox-network
+
+        docker compose down -v || true
         docker-compose -f docker-compose.yml up -d
 
         # Attendre que les services soient prêts
