@@ -276,6 +276,7 @@ jobs:
               echo "DB_USERNAME=$MONGO_DB_USERNAME" >> .env
               echo "DB_PASSWORD=$MONGO_DB_PASSWORD" >> .env
               echo "DB_RESULT_MAX_LIMIT=$DB_RESULT_MAX_LIMIT" >> .env
+              echo "ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true" >> .env
               ;;
             "svc-clients")
               echo "DB_HOST=$MYSQL_DB_HOST" > .env
@@ -316,6 +317,7 @@ jobs:
               echo "MONGO_DB_USERNAME=$MONGO_DB_USERNAME" >> .env
               echo "MONGO_DB_PASSWORD=$MONGO_DB_PASSWORD" >> .env
               echo "MONGO_DB_RESULT_MAX_LIMIT=$MONGO_DB_RESULT_MAX_LIMIT_USAGE" >> .env
+              echo "ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true" >> .env
               ;;
             "svc-orchestration")
               echo "FLASK_PORT=$SAGA_FLASK_PORT" > .env
