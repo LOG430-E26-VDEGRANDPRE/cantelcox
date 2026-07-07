@@ -104,70 +104,72 @@ jobs:
             # Configurer les variables d'environnement pour chaque service
             case $service in
               "svc-catalogue")
-                echo "MONGODB_HOST=$MONGODB_HOST" > ./$service/.env
-                echo "MONGO_DB_NAME=$MONGO_DB_NAME" >> ./$service/.env
-                echo "DB_USERNAME=$MONGO_DB_USERNAME" >> ./$service/.env
-                echo "DB_PASSWORD=$MONGO_DB_PASSWORD" >> ./$service/.env
-                echo "DB_RESULT_MAX_LIMIT=$DB_RESULT_MAX_LIMIT" >> ./$service/.env
+                echo "MONGODB_HOST=$MONGODB_HOST" > .env
+                echo "MONGO_DB_NAME=$MONGO_DB_NAME" >> .env
+                echo "DB_USERNAME=$MONGO_DB_USERNAME" >> .env
+                echo "DB_PASSWORD=$MONGO_DB_PASSWORD" >> .env
+                echo "DB_RESULT_MAX_LIMIT=$DB_RESULT_MAX_LIMIT" >> .env
                 ;;
               "svc-clients")
-                echo "DB_HOST=$MYSQL_DB_HOST" > ./$service/.env
-                echo "DB_PORT=$MYSQL_DB_PORT" >> ./$service/.env
-                echo "DB_USER=$MYSQL_DB_USER" >> ./$service/.env
-                echo "DB_PASSWORD=$MYSQL_DB_PASSWORD" >> ./$service/.env
-                echo "DB_NAME=$MYSQL_DB_NAME_PARTY" >> ./$service/.env
-                echo "KC_ADMIN_USER=$KC_ADMIN_USER" >> ./$service/.env
-                echo "KC_ADMIN_PASSWORD=$KC_ADMIN_PASSWORD" >> ./$service/.env
-                echo "KC_URL=$KC_URL" >> ./$service/.env
-                echo "KC_PUBLIC_URL=$KC_PUBLIC_URL" >> ./$service/.env
-                echo "KC_REALM=$KC_REALM" >> ./$service/.env
-                echo "KC_CLIENT_ID=$KC_CLIENT_ID" >> ./$service/.env
+                echo "DB_HOST=$MYSQL_DB_HOST" > .env
+                echo "DB_PORT=$MYSQL_DB_PORT" >> .env
+                echo "DB_USER=$MYSQL_DB_USER" >> .env
+                echo "DB_PASSWORD=$MYSQL_DB_PASSWORD" >> .env
+                echo "DB_NAME=$MYSQL_DB_NAME_PARTY" >> .env
+                echo "KC_ADMIN_USER=$KC_ADMIN_USER" >> .env
+                echo "KC_ADMIN_PASSWORD=$KC_ADMIN_PASSWORD" >> .env
+                echo "KC_URL=$KC_URL" >> .env
+                echo "KC_PUBLIC_URL=$KC_PUBLIC_URL" >> .env
+                echo "KC_REALM=$KC_REALM" >> .env
+                echo "KC_CLIENT_ID=$KC_CLIENT_ID" >> .env
                 ;;
               "svc-commandes")
-                echo "DB_HOST=$MYSQL_DB_HOST" > ./$service/.env
-                echo "DB_PORT=$MYSQL_DB_PORT" >> ./$service/.env
-                echo "DB_USER=$MYSQL_DB_USER" >> ./$service/.env
-                echo "DB_PASSWORD=$MYSQL_DB_PASSWORD" >> ./$service/.env
-                echo "DB_NAME=$MYSQL_DB_NAME_ORDER" >> ./$service/.env
-                echo "REDIS_HOST=$REDIS_HOST" >> ./$service/.env
-                echo "REDIS_PORT=$REDIS_PORT" >> ./$service/.env
-                echo "REDIS_DB=$REDIS_DB_COMMANDES" >> ./$service/.env
-                echo "API_GATEWAY_URL=$API_GATEWAY_URL" >> ./$service/.env
+                echo "DB_HOST=$MYSQL_DB_HOST" > .env
+                echo "DB_PORT=$MYSQL_DB_PORT" >> .env
+                echo "DB_USER=$MYSQL_DB_USER" >> .env
+                echo "DB_PASSWORD=$MYSQL_DB_PASSWORD" >> .env
+                echo "DB_NAME=$MYSQL_DB_NAME_ORDER" >> .env
+                echo "REDIS_HOST=$REDIS_HOST" >> .env
+                echo "REDIS_PORT=$REDIS_PORT" >> .env
+                echo "REDIS_DB=$REDIS_DB_COMMANDES" >> .env
+                echo "API_GATEWAY_URL=$API_GATEWAY_URL" >> .env
                 ;;
               "svc-facturation")
-                echo "DB_HOST=$MYSQL_DB_HOST" > ./$service/.env
-                echo "DB_PORT=$MYSQL_DB_PORT" >> ./$service/.env
-                echo "DB_USER=$MYSQL_DB_USER" >> ./$service/.env
-                echo "DB_PASSWORD=$MYSQL_DB_PASSWORD" >> ./$service/.env
-                echo "DB_NAME=$MYSQL_DB_NAME_CUSTOMERBILL" >> ./$service/.env
-                echo "REDIS_HOST=$REDIS_HOST" >> ./$service/.env
-                echo "REDIS_PORT=$REDIS_PORT" >> ./$service/.env
-                echo "REDIS_DB=$REDIS_DB_CUSTOMERBILL" >> ./$service/.env
-                echo "API_GATEWAY_URL=$API_GATEWAY_URL" >> ./$service/.env
-                echo "MONGODB_HOST=$MONGODB_HOST" >> ./$service/.env
-                echo "MONGO_DB_NAME=$MONGO_DB_NAME_USAGE" >> ./$service/.env
-                echo "MONGO_DB_USERNAME=$MONGO_DB_USERNAME" >> ./$service/.env
-                echo "MONGO_DB_PASSWORD=$MONGO_DB_PASSWORD" >> ./$service/.env
-                echo "MONGO_DB_RESULT_MAX_LIMIT=$MONGO_DB_RESULT_MAX_LIMIT_USAGE" >> ./$service/.env
+                echo "DB_HOST=$MYSQL_DB_HOST" > .env
+                echo "DB_PORT=$MYSQL_DB_PORT" >> .env
+                echo "DB_USER=$MYSQL_DB_USER" >> .env
+                echo "DB_PASSWORD=$MYSQL_DB_PASSWORD" >> .env
+                echo "DB_NAME=$MYSQL_DB_NAME_CUSTOMERBILL" >> .env
+                echo "REDIS_HOST=$REDIS_HOST" >> .env
+                echo "REDIS_PORT=$REDIS_PORT" >> .env
+                echo "REDIS_DB=$REDIS_DB_CUSTOMERBILL" >> .env
+                echo "API_GATEWAY_URL=$API_GATEWAY_URL" >> .env
+                echo "MONGODB_HOST=$MONGODB_HOST" >> .env
+                echo "MONGO_DB_NAME=$MONGO_DB_NAME_USAGE" >> .env
+                echo "MONGO_DB_USERNAME=$MONGO_DB_USERNAME" >> .env
+                echo "MONGO_DB_PASSWORD=$MONGO_DB_PASSWORD" >> .env
+                echo "MONGO_DB_RESULT_MAX_LIMIT=$MONGO_DB_RESULT_MAX_LIMIT_USAGE" >> .env
                 ;;
               "svc-orchestration")
-                echo "FLASK_PORT=$SAGA_FLASK_PORT" > ./$service/.env
-                echo "API_GATEWAY_URL=$API_GATEWAY_URL" >> ./$service/.env
-                echo "FACTURATION_API=$FACTURATION_API" >> ./$service/.env
-                echo "CLIENTS_URL=$CLIENTS_URL" >> ./$service/.env
-                echo "COMMANDES_URL=$COMMANDES_URL" >> ./$service/.env
-                echo "CATALOGUE_URL=$CATALOGUE_URL" >> ./$service/.env
-                echo "FACTURATION_URL=$FACTURATION_URL" >> ./$service/.env
-                echo "LIGNES_WEBCONSOLE=$LIGNES_WEBCONSOLE" >> ./$service/.env
-                echo "LIGNES_UDM=$LIGNES_UDM" >> ./$service/.env
-                echo "ADMIN_FREE5GC=$ADMIN_FREE5GC" >> ./$service/.env
-                echo "PASSWORD_FREE5GC=$PASSWORD_FREE5GC" >> ./$service/.env
-                echo "KC_CLIENT_ID=$KC_CLIENT_ID" >> ./$service/.env
-                echo "KC_REALM=$KC_REALM" >> ./$service/.env
-                echo "KC_CLIENT_SECRET=$KC_CLIENT_SECRET" >> ./$service/.env
-                echo "KC_URL=$KC_URL" >> ./$service/.env
+                echo "FLASK_PORT=$SAGA_FLASK_PORT" > .env
+                echo "API_GATEWAY_URL=$API_GATEWAY_URL" >> .env
+                echo "FACTURATION_API=$FACTURATION_API" >> .env
+                echo "CLIENTS_URL=$CLIENTS_URL" >> .env
+                echo "COMMANDES_URL=$COMMANDES_URL" >> .env
+                echo "CATALOGUE_URL=$CATALOGUE_URL" >> .env
+                echo "FACTURATION_URL=$FACTURATION_URL" >> .env
+                echo "LIGNES_WEBCONSOLE=$LIGNES_WEBCONSOLE" >> .env
+                echo "LIGNES_UDM=$LIGNES_UDM" >> .env
+                echo "ADMIN_FREE5GC=$ADMIN_FREE5GC" >> .env
+                echo "PASSWORD_FREE5GC=$PASSWORD_FREE5GC" >> .env
+                echo "KC_CLIENT_ID=$KC_CLIENT_ID" >> .env
+                echo "KC_REALM=$KC_REALM" >> .env
+                echo "KC_CLIENT_SECRET=$KC_CLIENT_SECRET" >> .env
+                echo "KC_URL=$KC_URL" >> .env
                 ;;
             esac
+
+            cat .env
 
             docker build -t vdegrandpre/$service:latest .
 
