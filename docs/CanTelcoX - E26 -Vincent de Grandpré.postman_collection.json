@@ -1,0 +1,1044 @@
+{
+	"info": {
+		"_postman_id": "e24fc2fe-34f8-4a34-8525-b41fbcc33e44",
+		"name": "CanTelcoX - E26 -Vincent de Grandpré",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "55591730",
+		"_collection_link": "https://www.postman.com/vincent-de-grandpre-1-4639069/workspace/vincent-de-grandpr-s-workspace/collection/55591730-e24fc2fe-34f8-4a34-8525-b41fbcc33e44?action=share&source=collection_link&creator=55591730"
+	},
+	"item": [
+		{
+			"name": "Clients",
+			"item": [
+				{
+					"name": "Créer un profil",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// 2. Parser si c'est du JSON",
+									"const jsonData = pm.response.json().creation_detail;",
+									"const jsonBody = JSON.parse(pm.request.body.raw);",
+									"",
+									"console.log(`Suivez les instructions en vous connectant au lien suivant avez l'usager ${jsonBody.username} et le mot de passe temporaire ${jsonData.mdp_temporaire} puis renseignez les variables d'environnement 'username' et 'password' afin de lancer les Postman Flow subséquents.`,jsonData.lien_configuration);",
+									"console.log(\"Aussi renseigner la variable d'environnement 'otp' pour soumettre le code au lancement du script\");"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Test\",\n    \"lastName\": \"CanTelcoX\",\n    \"username\": \"test_1_cantelcox\",\n    \"email\": \"test-cantelcox-1@de-grandpre.quebec\"   \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/clients/v1/party",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clients",
+								"v1",
+								"party"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authentification (JWT)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let body = JSON.parse(pm.request.body.raw || \"{}\");",
+									"body.username = pm.environment.get('username');",
+									"body.password = pm.environment.get('password');",
+									"body.otp = pm.environment.get('otp');",
+									"pm.request.body.raw = JSON.stringify(body);",
+									"console.log('Authentification', body);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"abonne\",\n    \"password\": \"test-cantelcox\",\n    \"otp\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/clients/v1/auth",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clients",
+								"v1",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Santé",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{clients_url}}/health",
+							"host": [
+								"{{clients_url}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Métriques",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{clients_url}}/metrics",
+							"host": [
+								"{{clients_url}}"
+							],
+							"path": [
+								"metrics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lire un profil",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//pm.request.url.path[2] = parseInt(pm.environment.get(\"party_id\"));"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/clients/v1/party/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clients",
+								"v1",
+								"party",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Supprimer un profil",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.url.path[1] = parseInt(pm.variables.get(\"party_id\"));"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{clients_url}}/v1/party/8",
+							"host": [
+								"{{clients_url}}"
+							],
+							"path": [
+								"v1",
+								"party",
+								"8"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Orchestration",
+			"item": [
+				{
+					"name": "Test bout-en-bout - commande, facturation et paiement, activation",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": 2,\n    \"items\": [\n        {\"productOfferingRef\": \"SMGA54\", \"quantity\": 4, \"description\": \"Téléphone\"},\n        {\"productOfferingRef\": \"MOB001\", \"quantity\": 1, \"description\": \"Ligne de service mobile\", \"numero\": \"5145855993\"}\n    ],\n    \"idempotency_key\": \"1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/orchestration/v1/commande",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orchestration",
+								"v1",
+								"commande"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Santé",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{saga_url}}/health-check",
+							"host": [
+								"{{saga_url}}"
+							],
+							"path": [
+								"health-check"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Métriques",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{saga_url}}/metrics",
+							"host": [
+								"{{saga_url}}"
+							],
+							"path": [
+								"metrics"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Commandes",
+			"item": [
+				{
+					"name": "Créer une commande",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": 1,\n    \"items\": [\n        {\"product_id\": 1, \"quantity\": 1, \"description\": \"Téléphone\"},\n        {\"product_id\": 4, \"quantity\": 1, \"description\": \"Ligne de service mobile\"}\n    ],\n    \"category\": \"Postman\",\n    \"order_description\": \"Commande de test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{commandes_url}}/v1/orders",
+							"host": [
+								"{{commandes_url}}"
+							],
+							"path": [
+								"v1",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Santé",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{commandes_url}}/health-check",
+							"host": [
+								"{{commandes_url}}"
+							],
+							"path": [
+								"health-check"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Métriques",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{commandes_url}}/metrics",
+							"host": [
+								"{{commandes_url}}"
+							],
+							"path": [
+								"metrics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lire une commande",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/commandes/v1/orders/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"commandes",
+								"v1",
+								"orders",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lire les offres de produits d'une commande",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{commandes_url}}/v1/productofferings/1-4",
+							"host": [
+								"{{commandes_url}}"
+							],
+							"path": [
+								"v1",
+								"productofferings",
+								"1-4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lire un produit commandé",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{commandes_url}}/v1/products/1",
+							"host": [
+								"{{commandes_url}}"
+							],
+							"path": [
+								"v1",
+								"products",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ajouter un paiement à une commande",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"order_id\": 15,\n    \"is_paid\": false,\n    \"payment_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{commandes_url}}/v1/orders",
+							"host": [
+								"{{commandes_url}}"
+							],
+							"path": [
+								"v1",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Supprimer une commande",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{commandes_url}}/v1/orders/24",
+							"host": [
+								"{{commandes_url}}"
+							],
+							"path": [
+								"v1",
+								"orders",
+								"24"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Catalogue",
+			"item": [
+				{
+					"name": "Créer une offre de produit ou service",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"TEST003\",\n    \"description\": \"Nouvelle offre de test - description minimale\",\n    \"productOfferingPrice\": 455.99,\n    \"characteristics\": [\n      {\"isService\": true},\n      {\"estImpermeable\": false}\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalogue_url}}/v1/productoffering",
+							"host": [
+								"{{catalogue_url}}"
+							],
+							"path": [
+								"v1",
+								"productoffering"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Santé",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{catalogue_url}}/health-check",
+							"host": [
+								"{{catalogue_url}}"
+							],
+							"path": [
+								"health-check"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Métriques",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{catalogue_url}}/metrics",
+							"host": [
+								"{{catalogue_url}}"
+							],
+							"path": [
+								"metrics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lire toutes les offres de produit",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/catalogue/v1/offres",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"catalogue",
+								"v1",
+								"offres"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Liste une sélection d'offres par leur nom séparé par des tirets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/catalogue/v1/offres/MOB001-SMGA54",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"catalogue",
+								"v1",
+								"offres",
+								"MOB001-SMGA54"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Affecter un stock absolu à une offre",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productOfferingRef\": \"MOB001\",\n    \"quantity\": 2500\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalogue_url}}/v1/stocks",
+							"host": [
+								"{{catalogue_url}}"
+							],
+							"path": [
+								"v1",
+								"stocks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Supprimer une offre par son nom",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{catalogue_url}}/v1/productoffering/IPH008",
+							"host": [
+								"{{catalogue_url}}"
+							],
+							"path": [
+								"v1",
+								"productoffering",
+								"IPH008"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ajouter / Retirer des stocks à un ou plusieur produits",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"items\": [\n        {\"productOfferingRef\": \"SMGA54\", \"quantity\": 1501, \"description\": \"Téléphone\"},\n        {\"productOfferingRef\": \"MOB001\", \"quantity\": 1, \"description\": \"Ligne de service mobile\"}\n    ],\n    \"operation\": \"-\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalogue_url}}/v1/stocks",
+							"host": [
+								"{{catalogue_url}}"
+							],
+							"path": [
+								"v1",
+								"stocks"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Facturation",
+			"item": [
+				{
+					"name": "Créer un cycle de facturation",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"202607\",\n    \"description\": \"Facturation mensuelle juillet 2026\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{facturation_url}}/v1/billcycles",
+							"host": [
+								"{{facturation_url}}"
+							],
+							"path": [
+								"v1",
+								"billcycles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Créer une facture",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"billcycle_id\": 1,\n    \"partyRef\": 2,\n    \"remaining_amount\": 25.95,\n    \"items\": [\n        {\n            \"productRef\": 1,\n            \"usageRef\": \"asdbashjasbdbh\",\n            \"amount\": 25.95\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{facturation_url}}/v1/customerbills",
+							"host": [
+								"{{facturation_url}}"
+							],
+							"path": [
+								"v1",
+								"customerbills"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Créer un paiement pour une facture",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customerbill_id\": 17,\n    \"amount\": 25.95\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/facturation/v1/paiement",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"facturation",
+								"v1",
+								"paiement"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Santé",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{facturation_url}}/health-check",
+							"host": [
+								"{{facturation_url}}"
+							],
+							"path": [
+								"health-check"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mesures",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{facturation_url}}/metrics",
+							"host": [
+								"{{facturation_url}}"
+							],
+							"path": [
+								"metrics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lire une facture",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customerbill_id\": 1,\n    \"amount\": 25.95\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/facturation/v1/customerbill/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"facturation",
+								"v1",
+								"customerbill",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lire toutes les factures d'un client",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/facturation/v1/client/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"facturation",
+								"v1",
+								"client",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Supprimer une facture",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{facturation_url}}/v1/customerbills/1",
+							"host": [
+								"{{facturation_url}}"
+							],
+							"path": [
+								"v1",
+								"customerbills",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Appliquer un paiement à une facture",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cardNumber\": 123456789876,\n    \"cardCode\": 123,\n    \"expirationDate\": \"2029-04\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/facturation/v1/paiement/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"facturation",
+								"v1",
+								"paiement",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Appliquer un lien de paiement à une facture",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customerbill_id\": 1,\n    \"payment_link\": \"http://localhost/test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{facturation_url}}/v1/customerbills/link",
+							"host": [
+								"{{facturation_url}}"
+							],
+							"path": [
+								"v1",
+								"customerbills",
+								"link"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": ""
+		},
+		{
+			"key": "clients_url",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

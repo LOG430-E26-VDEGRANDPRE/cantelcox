@@ -1,0 +1,772 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CanTelcoX - E26 -Vincent de Grandpré",
+    "version": "1.0.0",
+    "description": ""
+  },
+  "servers": [
+    {
+      "url": "{{base_url}}"
+    },
+    {
+      "url": "{{clients_url}}"
+    },
+    {
+      "url": "{{saga_url}}"
+    },
+    {
+      "url": "{{commandes_url}}"
+    },
+    {
+      "url": "{{catalogue_url}}"
+    },
+    {
+      "url": "{{facturation_url}}"
+    }
+  ],
+  "paths": {
+    "/clients/v1/party": {
+      "post": {
+        "summary": "Créer un profil",
+        "responses": {},
+        "tags": [
+          "Clients"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              },
+              "example": {
+                "firstName": "Test",
+                "lastName": "CanTelcoX",
+                "username": "test_1_cantelcox",
+                "email": "test-cantelcox-1@de-grandpre.quebec"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/clients/v1/auth": {
+      "post": {
+        "summary": "Authentification (JWT)",
+        "responses": {},
+        "tags": [
+          "Clients"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "otp": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "username": "abonne",
+                "password": "test-cantelcox",
+                "otp": ""
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Santé",
+        "responses": {},
+        "tags": [
+          "Clients"
+        ]
+      }
+    },
+    "/metrics": {
+      "get": {
+        "summary": "Métriques",
+        "responses": {},
+        "tags": [
+          "Clients"
+        ]
+      }
+    },
+    "/clients/v1/party/1": {
+      "get": {
+        "summary": "Lire un profil",
+        "responses": {},
+        "tags": [
+          "Clients"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/party/8": {
+      "delete": {
+        "summary": "Supprimer un profil",
+        "responses": {},
+        "tags": [
+          "Clients"
+        ]
+      }
+    },
+    "/orchestration/v1/commande": {
+      "post": {
+        "summary": "Test bout-en-bout - commande, facturation et paiement, activation",
+        "responses": {},
+        "tags": [
+          "Orchestration"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "integer"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "productOfferingRef": {
+                          "type": "string"
+                        },
+                        "quantity": {
+                          "type": "integer"
+                        },
+                        "description": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "idempotency_key": {
+                    "type": "string",
+                    "format": "utc-millisec"
+                  }
+                }
+              },
+              "example": {
+                "user_id": 2,
+                "items": [
+                  {
+                    "productOfferingRef": "SMGA54",
+                    "quantity": 4,
+                    "description": "Téléphone"
+                  },
+                  {
+                    "productOfferingRef": "MOB001",
+                    "quantity": 1,
+                    "description": "Ligne de service mobile",
+                    "numero": "5145855993"
+                  }
+                ],
+                "idempotency_key": "1"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health-check": {
+      "get": {
+        "summary": "Santé",
+        "responses": {},
+        "tags": [
+          "Orchestration"
+        ]
+      }
+    },
+    "/v1/orders": {
+      "post": {
+        "summary": "Créer une commande",
+        "responses": {},
+        "tags": [
+          "Commandes"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "integer"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": {
+                          "type": "integer"
+                        },
+                        "quantity": {
+                          "type": "integer"
+                        },
+                        "description": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "order_description": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "user_id": 1,
+                "items": [
+                  {
+                    "product_id": 1,
+                    "quantity": 1,
+                    "description": "Téléphone"
+                  },
+                  {
+                    "product_id": 4,
+                    "quantity": 1,
+                    "description": "Ligne de service mobile"
+                  }
+                ],
+                "category": "Postman",
+                "order_description": "Commande de test"
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Ajouter un paiement à une commande",
+        "responses": {},
+        "tags": [
+          "Commandes"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "order_id": {
+                    "type": "integer"
+                  },
+                  "is_paid": {
+                    "type": "boolean"
+                  },
+                  "payment_id": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "example": {
+                "order_id": 15,
+                "is_paid": false,
+                "payment_id": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "/commandes/v1/orders/1": {
+      "get": {
+        "summary": "Lire une commande",
+        "responses": {},
+        "tags": [
+          "Commandes"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/productofferings/1-4": {
+      "get": {
+        "summary": "Lire les offres de produits d'une commande",
+        "responses": {},
+        "tags": [
+          "Commandes"
+        ]
+      }
+    },
+    "/v1/products/1": {
+      "get": {
+        "summary": "Lire un produit commandé",
+        "responses": {},
+        "tags": [
+          "Commandes"
+        ]
+      }
+    },
+    "/v1/orders/24": {
+      "delete": {
+        "summary": "Supprimer une commande",
+        "responses": {},
+        "tags": [
+          "Commandes"
+        ]
+      }
+    },
+    "/v1/productoffering": {
+      "post": {
+        "summary": "Créer une offre de produit ou service",
+        "responses": {},
+        "tags": [
+          "Catalogue"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "productOfferingPrice": {
+                    "type": "number"
+                  },
+                  "characteristics": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "isService": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "name": "TEST003",
+                "description": "Nouvelle offre de test - description minimale",
+                "productOfferingPrice": 455.99,
+                "characteristics": [
+                  {
+                    "isService": true
+                  },
+                  {
+                    "estImpermeable": false
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/catalogue/v1/offres": {
+      "get": {
+        "summary": "Lire toutes les offres de produit",
+        "responses": {},
+        "tags": [
+          "Catalogue"
+        ]
+      }
+    },
+    "/catalogue/v1/offres/MOB001-SMGA54": {
+      "get": {
+        "summary": "Liste une sélection d'offres par leur nom séparé par des tirets",
+        "responses": {},
+        "tags": [
+          "Catalogue"
+        ]
+      }
+    },
+    "/v1/stocks": {
+      "put": {
+        "summary": "Affecter un stock absolu à une offre",
+        "responses": {},
+        "tags": [
+          "Catalogue"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "productOfferingRef": {
+                    "type": "string"
+                  },
+                  "quantity": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "example": {
+                "productOfferingRef": "MOB001",
+                "quantity": 2500
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Ajouter / Retirer des stocks à un ou plusieur produits",
+        "responses": {},
+        "tags": [
+          "Catalogue"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "productOfferingRef": {
+                          "type": "string"
+                        },
+                        "quantity": {
+                          "type": "integer"
+                        },
+                        "description": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "operation": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "items": [
+                  {
+                    "productOfferingRef": "SMGA54",
+                    "quantity": 1501,
+                    "description": "Téléphone"
+                  },
+                  {
+                    "productOfferingRef": "MOB001",
+                    "quantity": 1,
+                    "description": "Ligne de service mobile"
+                  }
+                ],
+                "operation": "-"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/productoffering/IPH008": {
+      "delete": {
+        "summary": "Supprimer une offre par son nom",
+        "responses": {},
+        "tags": [
+          "Catalogue"
+        ]
+      }
+    },
+    "/v1/billcycles": {
+      "post": {
+        "summary": "Créer un cycle de facturation",
+        "responses": {},
+        "tags": [
+          "Facturation"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "format": "color"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "name": "202607",
+                "description": "Facturation mensuelle juillet 2026"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/customerbills": {
+      "post": {
+        "summary": "Créer une facture",
+        "responses": {},
+        "tags": [
+          "Facturation"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "billcycle_id": {
+                    "type": "integer"
+                  },
+                  "partyRef": {
+                    "type": "integer"
+                  },
+                  "remaining_amount": {
+                    "type": "number"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "productRef": {
+                          "type": "integer"
+                        },
+                        "usageRef": {
+                          "type": "string"
+                        },
+                        "amount": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "billcycle_id": 1,
+                "partyRef": 2,
+                "remaining_amount": 25.95,
+                "items": [
+                  {
+                    "productRef": 1,
+                    "usageRef": "asdbashjasbdbh",
+                    "amount": 25.95
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/facturation/v1/paiement": {
+      "post": {
+        "summary": "Créer un paiement pour une facture",
+        "responses": {},
+        "tags": [
+          "Facturation"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "customerbill_id": {
+                    "type": "integer"
+                  },
+                  "amount": {
+                    "type": "number"
+                  }
+                }
+              },
+              "example": {
+                "customerbill_id": 17,
+                "amount": 25.95
+              }
+            }
+          }
+        }
+      }
+    },
+    "/facturation/v1/customerbill/2": {
+      "get": {
+        "summary": "Lire une facture",
+        "responses": {},
+        "tags": [
+          "Facturation"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/facturation/v1/client/2": {
+      "get": {
+        "summary": "Lire toutes les factures d'un client",
+        "responses": {},
+        "tags": [
+          "Facturation"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/customerbills/1": {
+      "delete": {
+        "summary": "Supprimer une facture",
+        "responses": {},
+        "tags": [
+          "Facturation"
+        ]
+      }
+    },
+    "/facturation/v1/paiement/1": {
+      "patch": {
+        "summary": "Appliquer un paiement à une facture",
+        "responses": {},
+        "tags": [
+          "Facturation"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cardNumber": {
+                    "type": "integer"
+                  },
+                  "cardCode": {
+                    "type": "integer"
+                  },
+                  "expirationDate": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "cardNumber": 123456789876,
+                "cardCode": 123,
+                "expirationDate": "2029-04"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/customerbills/link": {
+      "patch": {
+        "summary": "Appliquer un lien de paiement à une facture",
+        "responses": {},
+        "tags": [
+          "Facturation"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "customerbill_id": {
+                    "type": "integer"
+                  },
+                  "payment_link": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                }
+              },
+              "example": {
+                "customerbill_id": 1,
+                "payment_link": "http://localhost/test"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

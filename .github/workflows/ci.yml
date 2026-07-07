@@ -168,7 +168,6 @@ jobs:
     name: Deploy
     needs: build-and-test
     runs-on: [self-hosted, deploy]
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
 
     steps:
     - name: Checkout code
