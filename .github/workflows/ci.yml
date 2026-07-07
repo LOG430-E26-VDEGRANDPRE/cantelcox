@@ -132,6 +132,8 @@ jobs:
                 ;;
             esac
 
+            cat .env
+
             docker build -t vdegrandpre/$service:latest .
 
             # Vérifier si des tests existent
