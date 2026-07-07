@@ -38,7 +38,7 @@ services:
       - ./db-init:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -proot"]
-      interval: 5s
+      interval: 10s
       timeout: 10s
       retries: 20
       start_period: 1s
