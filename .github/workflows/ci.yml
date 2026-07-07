@@ -52,11 +52,10 @@ jobs:
 
     - name: Build and test services
       run: |
+        # Liste des services à construire
+        SERVICES=("svc-catalogue" "svc-clients" "svc-commandes" "svc-facturation" "svc-orchestration" "svc-lignes")
 
         docker network inspect cantelcox-network >/dev/null 2>&1 || docker network create cantelcox-network
-
-        # Liste des services à construire
-        SERVICES=("svc-catalogue" "svc-clients" "svc-commandes" "svc-facturation" "svc-orchestration")
 
         for service in "${SERVICES[@]}"; do
           echo "Building $service..."
@@ -179,9 +178,6 @@ jobs:
 
     - name: Clone subprojects
       run: |
-
-        docker network inspect cantelcox-network >/dev/null 2>&1 || docker network create cantelcox-network
-
         # Liste des sous-projets à cloner
         declare -A REPOS=(
           ["svc-catalogue"]="github.com/LOG430-E26-VDEGRANDPRE/svc-catalogue.git"
@@ -204,6 +200,7 @@ jobs:
 
     - name: Deploy with Docker Compose
       run: |
+        docker network inspect cantelcox-network >/dev/null 2>&1 || docker network create cantelcox-network
         docker-compose -f docker-compose.yml up -d
 
         # Attendre que les services soient prêts
