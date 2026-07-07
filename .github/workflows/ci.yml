@@ -160,7 +160,7 @@ jobs:
         for service in "${SERVICES[@]}"; do
           if [ -d "$service" ]; then
             echo "Pushing $service image..."
-            docker push cantelcox/$service:latest
+            docker push vdegrandpre/$service:latest
           fi
         done
 
