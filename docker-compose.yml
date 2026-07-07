@@ -62,7 +62,7 @@ services:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping').ok", "--quiet"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 20
       start_period: 5s
 
   redis:
