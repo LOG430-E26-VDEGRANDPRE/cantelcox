@@ -42,6 +42,8 @@ services:
       timeout: 10s
       retries: 20
       start_period: 1s
+    depends_on:
+      - copie-initdb-services
 
   mongo:
     image: mongo:6
@@ -64,6 +66,8 @@ services:
       timeout: 5s
       retries: 20
       start_period: 5s
+    depends_on:
+      - copie-initdb-services
 
   redis:
     image: redis:7
