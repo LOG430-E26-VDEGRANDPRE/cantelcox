@@ -52,6 +52,9 @@ jobs:
 
     - name: Build and test services
       run: |
+
+        docker network inspect cantelcox-network >/dev/null 2>&1 || docker network create cantelcox-network
+
         # Liste des services à construire
         SERVICES=("svc-catalogue" "svc-clients" "svc-commandes" "svc-facturation" "svc-orchestration")
 
@@ -176,6 +179,9 @@ jobs:
 
     - name: Clone subprojects
       run: |
+
+        docker network inspect cantelcox-network >/dev/null 2>&1 || docker network create cantelcox-network
+
         # Liste des sous-projets à cloner
         declare -A REPOS=(
           ["svc-catalogue"]="github.com/LOG430-E26-VDEGRANDPRE/svc-catalogue.git"
