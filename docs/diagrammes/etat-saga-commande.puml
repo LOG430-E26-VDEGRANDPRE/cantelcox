@@ -1,0 +1,47 @@
+@startuml
+title
+Diagramme de machine à état
+Orchestrateur Saga Commande
+endtitle
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+[*] --> 1
+1: ORDER_DRAFT
+
+1 --> 2 : VerifyBuyer
+2: BUYER_VERIFIED
+
+2 --> 3 : VerifyOfferings
+3: OFFERING_VERIFIED
+
+3 --> 4 : OrderVerified
+4: ORDER_CREATED
+
+4 --> 5 : DecreaseStocks
+5: STOCK_DECREASED
+
+5 --> 5A : CreateCustomerBill
+5A: CUSTOMERBILL_CREATED
+
+5A --> 6 : CreatePayment
+6: PAYMENT_CREATED
+
+6 --> 7 : ActivateServices
+7: SERVICE_ACTIVE
+
+6 --> 8 : ActivateServicesFailure
+8: PAYMENT_DELETED
+
+5A -> 9 : CreatePaymentFailure
+5 --> 9 : CreateCustomerBillFailure
+8 --> 9 : IncreaseStocks
+9: STOCK_INCREASED
+
+4 --> 10 : DecraseStocksFailure
+9 --> 10 : DeleteOrder
+10: ORDER_DELETED
+
+1 --> [*] : VerifyBuyerFailure
+2 --> [*] : VerifyOfferingsFailure
+7 --> [*]
+10 --> [*]
+@enduml

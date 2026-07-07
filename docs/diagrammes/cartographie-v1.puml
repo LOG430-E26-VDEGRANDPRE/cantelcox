@@ -1,0 +1,50 @@
+@startuml
+title Cartographie des contextes
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+skinparam component {
+BackgroundColor #APPLICATION
+}
+component Clients #MOTIVATION {
+package "Clients et identités" as BC1 #Wheat {
+[Party]
+}
+}
+component Audit #MOTIVATION {
+package "Conformité et audit" as BC6 #Thistle {
+[AntiFraude]
+[Event]
+}
+}
+component Catalogue #MOTIVATION {
+package "Catalogue et offres" as BC4 #BUSINESS {
+[ProductCatalog]
+[ProductOffering]
+}
+}
+component Commandes #MOTIVATION {
+package "Commandes et activations" as BC3 #TECHNOLOGY {
+[ProductOrder]
+[Product]
+}
+}
+component Lignes #MOTIVATION {
+package "Lignes et services" as BC2 #Lavender {
+[Service]
+}
+}
+component Facturation #MOTIVATION {
+package "Usage, tarification et facturation" as BC5 #IMPLEMENTATION {
+[CustomerBill]
+[Usage]
+}
+}
+
+BC1 -up-> Event : Anomalies
+BC6 -right-> Party : Notification
+ProductOrder --> Party : Acheteur
+Usage --> Product : Tarification d'usage
+ProductOrder --> AntiFraude : Vérification SIM
+CustomerBill --> Party : Payeur
+BC3 --> ProductOffering : Offre de produits
+Product --> Service : Ligne mobile
+@enduml

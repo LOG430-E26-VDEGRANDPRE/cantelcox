@@ -1,0 +1,62 @@
+
+@startuml
+
+skinparam package {
+    BackgroundColor #SkyBlue
+}
+skinparam componentStyle rectangle
+title
+Vue de construction
+Niveau 2 - Service Commandes - Vue hexagonale
+Phase I
+endtitle
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+
+package "Adapteurs d'entrée" as IN {
+component "REST\n(JSON)" as Flask
+}
+
+skinparam sequenceMessageAlign center
+
+package "Domaine" as D #PowderBlue {
+() "UC05_PriseDeCommande" <<port.in>> as UC05
+() "UC03_ActivationLigneMobile" <<port.in>> as UC03
+() "UC08_CycleDeFacturationMensuelle" <<port.in>> as UC08
+() ReferentielCommandes <<port.out>>
+() ReferentielProduits <<port.out>>
+component ServicePriseDeCommande <<application>>
+component ServiceActiverProduit <<application>>
+component ServiceConsulterProduit <<application>>
+component "ProductOrder\n(agrégat)" as ProductOrder
+component "OrderStatus\n(machine à état)" as OrderStatus
+component "ProductOrderItem" as ProductOrderItem
+component "Product\n(agrégat)" as Product
+}
+package "Adapteurs de sortie" as OUT {
+component "adapter.out.persistence\nCommandes" as Persist_Commandes
+component "adapter.out.persistence\nProduits" as Persist_Produits
+}
+
+Flask --> UC05 : "appelle"
+Flask --> UC03 : "appelle"
+Flask --> UC08 : "appelle"
+
+UC05 -- ServicePriseDeCommande
+UC03 -- ServiceActiverProduit
+UC08 -- ServiceConsulterProduit
+
+ServicePriseDeCommande --> ProductOrder : "utilise"
+ServiceActiverProduit --> Product : "utilise"
+ServiceConsulterProduit --> Product : "utilise"
+
+ProductOrder --> ReferentielCommandes : "requiert"
+Product --> ReferentielProduits : "requiert"
+
+ProductOrder *-- ProductOrderItem
+ProductOrder -- OrderStatus
+ProductOrderItem -- Product
+
+Persist_Commandes -up[dashed]-|> ReferentielCommandes : "implémente"
+Persist_Produits -up[dashed]-|> ReferentielProduits : "implémente"
+
+@enduml

@@ -1,0 +1,48 @@
+@startuml
+title Authentification OTP sur opération sensible
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+actor Abonné as Abonné
+box "CanTelcoX" #Gold
+Abonné -> "API Gateway" as API : POST /orchestration/v1/commande/
+note right of Abonné
+Un utilisateur veut faire une opération sensible qui
+requiert une validation OTP. L'utilisateur a déjà un jeton JWT.
+end note
+API -> Orchestration : POST /v1/saga/order
+note right of Orchestration
+Le service vérifie si le jeton d'accès contient la valeur
+attendue de l'attribut 'acr' pour une opération complexe.
+On définit le niveau ACR souhaité à 2, par exemple.
+end note
+Orchestration -> Orchestration : Vérification JWT
+Orchestration -> Keycloak : authorize_redirect('acr_otp')
+note right of Keycloak
+Keycloak présente la page de saisie de code OTP
+et emet un nouveau jeton, si c'est réussi, puis 
+redirige l'abonné à l'orchestrateur avec le jeton
+contenant l'autorisation d'accès souhaité (acl=2)
+end note
+Abonné <-- Keycloak : formulaire de saisie OTP
+Abonné -> Keycloak : otp
+Abonné <-- Keycloak : redirection avec nouveau JWT
+Abonné -> Abonné : Extraction du JWT de la réponse
+note right of Abonné
+Le jeton d'accès est encapsulé dans la réponse et 
+doit être extrait.
+end note
+Abonné -> API : POST /orchestration/v1/commande/
+note right of Abonné
+La requête est faite avec le nouveau jeton d'accès
+contenant le contrôle d'accès pour opération sensible
+end note
+API -> Orchestration : POST /v1/saga/order
+note right of Orchestration
+Le service accepte le jeton et procède au traitement 
+orchestré. Le nouveau jeton pourra servir aux 
+services internes si besoin.
+end note
+Orchestration -> Orchestration : Traitement ...
+API <-- Orchestration : HTTP [200]
+Abonné <-- API : HTTP [200]
+end box
+@enduml

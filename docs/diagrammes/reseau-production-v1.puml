@@ -1,0 +1,50 @@
+@startnwdiag
+title
+Diagramme de réseau - Déploiement en production
+endtitle
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+nwdiag {
+    network WAN {
+        group {
+            description = "Accès public"
+            color = #TECHNOLOGY
+            api-gateway [address = "localhost:8080"]
+            keycloak [address = "localhost:8081"]
+        }
+        group {
+            description = "Intranet"
+            color = #APPLICATION
+            udm [address = "localhost:8000"]
+            webui [address = "localhost:5050"]
+            grafana [address = "localhost:3000"]
+            jaeger [address = "localhost:16686"]
+            usage-api [address = "localhost:8090"]
+        }
+    }
+    network cantelcox-network {
+        api-gateway [address = "api-gateway:8080"]
+        mysql [address = "mysql:3306"]
+        mongo [address = "mongo:27017"]
+        redis [address = "redis:6379"]
+        prometheus [address = "prometheus:9090"]
+        grafana [address = "grafana:3000"]
+        postgres_kc [address = "postgres_kc:5432"]
+        mysql [address = "mysql:3306"]
+        usage-api [address = "webui:8080"]
+        svc_orchestration [address = "svc_orchestration:5123"]
+        svc_facturation [address = "svc_facturation:5000"]
+        svc_client [address = "svc_client:5000"]
+        keycloak [address = "keycloak:8080"]
+        svc_commandes [address = "svc_commandes:5000"]
+        svc_catalogue [address = "svc_catalogue:5000"]
+        jaeger [address = "jaeger:16686\njaeger:4317\n..."]
+    }
+    network privnet {
+        mongo-free5gc [address = "mongo-free5gc:27017"]
+        nrf [address = "nrf:8000"]
+        udr [address = "udr:8000"]
+        udm [address = "udm:8000"]
+        webui [address = "webui:5000"]
+    }
+}
+@endnwdiag

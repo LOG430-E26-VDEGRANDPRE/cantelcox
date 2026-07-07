@@ -1,0 +1,65 @@
+@startuml
+title
+Diagramme de déploiement
+endtitle
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+
+node CanTelcoX {
+    component KrakenD
+}
+node Clients {
+    component Keycloak
+    component service_client.py
+    database db_client
+}
+node Lignes {
+    component udm
+    component webui
+    database "mongo-free5gc" as mongo_free5gc
+}
+node Commandes {
+    component service_commande.py
+    database db_commande
+}
+node Catalogue {
+    component service_catalogue.py
+    database db_catalogue
+    database redis_catalogue
+}
+node Audit {
+    component service_audit.py
+    database db_audit
+}
+node Facturation {
+    component service_facturation.py
+    database db_facturation
+    database redis_usage
+}
+node Orchestration {
+    component Jaeger
+    component service_orchestration.py
+    database db_orchestration
+}
+KrakenD <-> Keycloak : HTTP/JWT
+KrakenD <-> service_client.py : HTTP
+KrakenD <----> service_commande.py : HTTP
+KrakenD <----> service_facturation.py : HTTP
+KrakenD <----> service_audit.py : HTTP
+KrakenD <--> service_catalogue.py : HTTP
+KrakenD <--> service_orchestration.py : HTTP
+KrakenD -> Jaeger : OTLP
+KrakenD <---> webui : HTTP
+KrakenD <---> udm : HTTP
+service_client.py --> Keycloak : HTTP/OTP
+service_client.py <--> db_client
+service_commande.py <--> db_commande
+service_catalogue.py <--> db_catalogue
+service_catalogue.py <--> redis_catalogue
+service_audit.py <--> db_audit
+service_facturation.py <--> db_facturation
+service_facturation.py <--> redis_usage
+service_orchestration.py <--> db_orchestration
+service_orchestration.py <--> Jaeger : OTLP
+udm -- mongo_free5gc
+webui -- mongo_free5gc
+@enduml

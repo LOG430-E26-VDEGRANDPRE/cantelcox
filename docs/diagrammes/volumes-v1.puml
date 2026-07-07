@@ -1,0 +1,48 @@
+@startuml
+title
+Vue de déploiement - Volumes de persistence
+endtitle
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+
+node svc_clients
+node svc_commandes
+node svc_facturation
+node svc_catalogue
+node svc_facturation
+node svc_lignes
+node svc_audit
+node keycloak
+
+folder mysql_data {
+    database partys
+    database productorders
+    database customerbills
+}
+
+svc_clients --> partys
+svc_commandes --> productorders
+svc_facturation --> customerbills
+
+folder mongo_data {
+    database productofferings
+    database usages
+    database audits
+}
+
+svc_facturation --> usages
+svc_catalogue --> productofferings
+svc_audit -->audits
+
+folder postgres_data {
+    database keycloak.public
+}
+
+keycloak --> keycloak.public
+
+folder dbdata-mini {
+    database free5gc
+}
+
+svc_lignes --> free5gc
+
+@enduml

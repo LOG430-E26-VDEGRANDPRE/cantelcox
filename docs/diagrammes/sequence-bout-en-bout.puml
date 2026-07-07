@@ -1,0 +1,84 @@
+@startuml
+title
+Séquence bout-en-bout
+Inscription -> MFA -> Abonnement -> Activation -> Consultation d'usage
+endtitle
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+
+actor Abonné as Abonné
+
+participant "API\nGateway" as API #IMPLEMENTATION
+participant "Service\nClients" as Profil #Wheat
+participant "Service\nOrchestration" as Orchestration #Gold
+participant "Service\nCatalogue" as Catalogue #BUSINESS
+participant "Service\nLignes" as Lignes #Lavender
+participant "Service\nAudit" as Antifraude #Thistle
+participant "Service\nCommandes" as Commande #TECHNOLOGY
+participant "Service\nFacturation" as Facturation #IMPLEMENTATION
+
+Abonné -> API : POST /clients/v1/party
+API -> Profil : POST /v1/partyn
+group Phase II - validation anti fraude
+Profil -> Antifraude : POST /v1/identite/validation/
+Antifraude --> Profil : [200] OK
+end group
+Profil --> API : [200] {userId}
+API --> Abonné : [200] {userId}
+Abonné -> API : POST /clients/v1/auth
+API -> Profil : PATCH /v1/auth
+Profil --> API : [200] {jwt}
+API --> Abonné : [200] {jwt}
+Abonné -> API : POST /orchestration/v1/commande
+API -> Orchestration : POST /v1/saga/order
+group Phase I - validation de l'acheteur
+Orchestration -> Profil : GET /v1/party/{userId}
+Profil --> Orchestration : [200] OK
+end group
+group Phase I - validations des paramètres des offres de la commande
+Orchestration -> Catalogue : GET /v1/productoffering/{offres}
+Catalogue --> Orchestration : [200] {ProductOfferings}
+Orchestration --> Orchestration : vérification des offres
+end group
+group Phase I - création de produit pour chaque item de la commande
+Orchestration -> Commande : POST /v1/products
+Commande --> Orchestration : [200] {product_id}
+end group
+group Phase I - diminution des stocks
+Orchestration -> Catalogue : PATCH /v1/stocks
+end group
+Orchestration <-- Commande : [200] OK
+Orchestration -> Commande : POST /v1/orders/
+Commande --> Orchestration : [200] {order_id}
+group Phase I - création de la facture client
+Orchestration -> Commande : GET /v1/orders/{order_id}
+Commande --> Orchestration : [200] {order}
+Orchestration -> Facturation : POST /v1/billcycle
+Facturation --> Orchestration : [200] {billcycle_id}
+Orchestration -> Facturation : POST /v1/customerbills
+Facturation --> Orchestration : [200] {customerbill_id}
+end group
+group Phase I - création du paiement de la facture
+Orchestration -> Facturation : GET /v1/customerbills/{customerbill_id}
+Facturation --> Orchestration : [200] {customerbill}
+Orchestration -> Facturation : POST /v1/payments/payments
+Facturation --> Orchestration : [200] {payment_id}
+Orchestration -> Facturation : PATCH /v1/customerbills/link
+Facturation --> Orchestration : [200] - OK
+end group
+group Phase II - l'offre contient un numéro mobile (MSISDN) 
+    Orchestration -> Lignes : POST /v1/service/:msisdn:
+    Lignes --> Orchestration : [200] OK
+    Orchestration -> Commande : PATCH /v1/products/activation/
+    Commande --> Orchestration : [200] OK
+    Orchestration -> Profil : PATCH /v1/party/subscribe
+    Profil --> Orchestration : [200] OK
+end group
+Orchestration --> API : [200] {order_id, customerbill_id, payment_link, status}
+API --> Abonné : [200] [200] {order_id, customerbill_id, payment_link, status}
+group Phase II - récupération des usages
+Abonné -> API : GET /facturation/v1/usages/{userId}
+API -> Facturation : GET /v1/usages/{userId}
+Facturation --> API : [200] {usages}
+API --> Abonné : [200] {usages}
+end group
+@enduml

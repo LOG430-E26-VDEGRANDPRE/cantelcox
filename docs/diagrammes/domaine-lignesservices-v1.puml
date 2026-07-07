@@ -1,0 +1,35 @@
+@startuml
+title Modèle du domaine - Lignes et services
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+skinparam object<<Agrégat>> {
+BackgroundColor #APPLICATION
+}
+left to right direction
+package "Lignes et services" AS BC2 #Lavender {
+object Service <<Agrégat>> {
++id: UUID
++description: String
++isServiceEnabled: Boolean
++operatingStatus: OperatingStatus
++MSISDN : String
+}
+object ServiceSpecification <<Entité>> {
++id : UUID
++name: String
++version: String
+}
+object Characteristic <<Entité>> {
++id : UUID
++name : String
+}
+object Feature <<Entité>> {
++id : UUID
++name : String
++isEnabled : Boolean
+}
+}
+
+Service *--> "0..1" ServiceSpecification : serviceSpecification
+Feature *--> "0..*" Characteristic : featureCharacteristic
+ServiceSpecification *--> "0..*" Feature : fonction
+@enduml

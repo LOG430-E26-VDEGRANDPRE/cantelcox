@@ -1,0 +1,33 @@
+
+@startuml
+skinparam actor {
+    Shadowing true
+    BackgroundColor<<client>> Green
+    BackgroundColor<<externe>> SaddleBrown
+    BackgroundColor<<interne>> Green
+}
+skinparam component {
+    BackgroundColor<<Système>> Gold
+    BackgroundColor<<Externe>> LightSteelBlue
+}
+title
+Diagramme de contexte
+endtitle
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+top to bottom direction
+actor Abonné <<client>>
+actor Opérations <<interne>>
+actor Conformité <<externe>>
+actor Régulateur <<externe>>
+component CanTelcoX <<Système>>
+component "Processeur" <<Externe>> as Paiement
+component "Réseau (HLR/HSS)" <<Externe>> as Réseau
+component "ANC" <<Externe>> as ANC
+Abonné -down-> CanTelcoX : "Commandes et\npaiements\nHTTPS / JSON"
+Opérations -down-> CanTelcoX : "Traitement des\nfactures\nHTTPS / JSON"
+CanTelcoX -up-> Conformité : "Non conformités\nPUB / SUB"
+CanTelcoX --> Paiement : "Exécution de\n paiement\nHTTPS / JSON"
+CanTelcoX --> Réseau : "Provisionnement de\nservice\nREST / JSON"
+Régulateur --> CanTelcoX : "Audit usage et\nfacturation\nGraphQL"
+CanTelcoX --> ANC : "Bassin de numéros\nde téléphone\nSOAP / XML"
+@enduml

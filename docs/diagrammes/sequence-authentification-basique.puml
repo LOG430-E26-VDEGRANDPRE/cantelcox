@@ -1,0 +1,40 @@
+@startuml
+title Authentification basique avec OTP
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+actor Abonné as Abonné
+box "CanTelcoX" #Gold
+Abonné -> "API Gateway" as API : POST /orchestration/v1/commande/
+note right of Abonné
+Un utilisateur veut faire une opération qui requiert
+un accès authentifié sans être authentifié.
+end note
+Abonné <-- API : HTTP 401 - Unauthorized
+note right of Abonné
+L'utilisateur soumet son nom d'usager, mot de passe
+et le code de vérification OTP.
+end note
+Abonné --> API : POST /clients/v1/auth
+API -> Clients : POST /v1/auth
+Clients -> Keycloak : POST .../protocol/openid-connect/token
+note right of Keycloak
+Keycloak vérifie les information et émet un jeton 
+d'autorisation.
+end note
+Keycloak -> Clients : HTTP 200 / réponse
+API <- Clients : HTTP 200 / réponse
+Abonné <- API : HTTP 200 / Response
+Abonné -> Abonné : Extraction du JWT de la réponse
+note right of Abonné
+Le jeton d'accès est encapsulé dans la réponse et 
+doit être extrait.
+end note
+Abonné -> API : POST /orchestration/v1/commande
+note right of API
+Le service accepte le jeton et autorise l'accs protégé
+end note
+API -> Orchestration : POST /v1/saga/order
+Orchestration -> Orchestration : Traitement ...
+API <-- Orchestration : HTTP [200]
+Abonné <-- API : HTTP [200]
+end box
+@enduml

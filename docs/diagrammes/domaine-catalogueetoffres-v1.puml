@@ -1,0 +1,47 @@
+@startuml
+title Modèle du domaine - Catalogue et offres
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+skinparam object<<Agrégat>> {
+BackgroundColor #APPLICATION
+}
+left to right direction
+package "Catalogue et offres" as BC4 #BUSINESS {
+object ProductCatalog <<Agrégat>> {
++id : UUID
++name : Srting
++description : String
+}
+object Category <<Entité>> {
++id : UUID
++name : String
++description : String
+}
+object ProductOffering <<Agrégat>> {
++id : UUID
++name : String
++description : String
++version : String
++validFor : TimePeriod
++lifecycleStatus : String
++productOfferingPrice : Amount
+
+}
+object ProductSpecification <<Entité>> {
++id : UUID
++name : String
++version : String
+}
+object ProductSpecificationCharacteristic <<Entité>> {
++id : UUID
++name : String
++valueType : String
++value : String
+}
+}
+
+Category *--> "0..*" ProductOffering : productOffering
+ProductCatalog *--> "0..*" Category : category
+ProductOffering *--> "0..1" ProductSpecification : productSpecification
+ProductSpecification *--> "0..*" ProductSpecificationCharacteristic : prodSpecCharacteristic
+
+@enduml

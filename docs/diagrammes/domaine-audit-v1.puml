@@ -1,0 +1,41 @@
+@startuml
+title Modèle du domaine - Conformité et audit
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+skinparam object<<Agrégat>> {
+BackgroundColor #APPLICATION
+}
+left to right direction
+package "Conformité et audit" as BC6 #Thistle {
+
+object Event <<Agrégat>> {
++id : UUID
++description: String
++domain: String
++eventTime: DateTime
++eventType: String
++timeOccured: DateTime
++title: String
+}
+object Topic {
++id : UUID
++name: String
+}
+object Notification {
++id : UUID
++name: String
++description: String
++attachment: Attachment
+}
+object AntiFraude <<Agrégat>> { 
++id : UUID
++timeVerif: DateTime
++SourceVerification: String
++resultatVerification: String
+}
+}
+
+Topic *-- "0..*" Event : events
+Notification *-- "0..1" Topic : alerte
+AntiFraude --> Event : anomalies
+
+@enduml

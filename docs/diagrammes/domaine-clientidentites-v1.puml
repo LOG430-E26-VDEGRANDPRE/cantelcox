@@ -1,0 +1,46 @@
+@startuml
+title Modèle du domaine - Clients et identités
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+skinparam object<<Agrégat>> {
+BackgroundColor #APPLICATION
+}
+left to right direction
+package "Clients et identités" as BC1 #Wheat {
+object Party <<Agrégat>> {
++id : UUID
++name : String
++emailAddress : String
++phoneNumber : String
++city : String
++country: String
++postCode: String
++stateOrProvince: String
++street1 : String
++street2 : String
++isOrganization : Boolean
+-username : String
+}
+object Identité <<Entité>> {
++id : UUID
+-motDePasse : PasswordString
++statutIdentification : IdentificationStatus
+}
+object DonneesPersonnelles <<Entité>> {
++id : UUID
+-coteRisque : Integer
+-preuveAdresse : Blob
+-pieceIdentite : Blob
+-tuteur : Party
+}
+object JournalVerifications <<Entité>> {
++id : UUID
++timeVerification : DateTime
++sourceVerification : String
++resultatVerification : String
+}
+}
+
+Identité *--> "0..1" DonneesPersonnelles : donneesPersonnelles
+Party *--> "0..1" Identité : identity
+Party *--> "0..*" JournalVerifications : verifications
+@enduml

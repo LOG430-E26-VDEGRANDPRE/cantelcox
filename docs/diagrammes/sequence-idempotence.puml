@@ -1,0 +1,44 @@
+@startuml
+    title Garantie d'idempotence, de non rejoue et ultimement d'une seule transaction
+    header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+    actor Abonné as Abonné
+    box "CanTelcoX" #Gold
+    Abonné -> "API Gateway" as API : POST /orchestration/v1/commande/
+    note right of Abonné
+    Une requête est envoyés avec un attribut idempotence_key
+    et une charge utile de la commande à créer.
+    end note
+    API -> Orchestration : POST /v1/saga/order
+    Orchestration -> ProductOffering : POST /v1/orders
+    note right of ProductOffering
+    L'attribut idempotency_key est envoyé en
+    aval à la composante d'écriture en base de données.
+    end note
+    ProductOffering -> write_order.py : add_order(idempotence_key)
+    write_order.py -> write_order.py : vérification de l'idempotence
+    note right of write_order.py
+        1. Écrire idempotency_key dans la base de données avec un état PENDING
+        2. Si l'écriture échoue (idempotency_key est unique en base),
+           Gérer l'exception :
+              - Si l'état est COMPLETED, récupérer du cache la commande avec
+                par la valeur de la clé d'idempotence et le order_id 
+                de la cache mémoire
+              - Lancer une exception de type IdempotencyException
+        3. Effectuer l'opération d'affaires (créer la commande)
+        4. Mettre jour la table et modifier le status de idempotency_key
+           à COMPLETED
+    end note
+    ProductOffering <-- write_order.py : {order_id | IdempotencyException}
+    note right of ProductOffering
+    Analyse de l'exception levée, si IdempotencyException,
+    alors retourner le code de réponse HTTP 409 au client.
+    end note
+    Orchestration <-- ProductOffering : HTTP [200|409]
+    note right of Orchestration
+    Analyse le code de réponse, agier en fonction de
+    si c'est un code HTTP 409 et prévenir les effets de bord.
+    end note
+    API <-- Orchestration : HTTP [200]
+    Abonné <-- API : HTTP [200]
+    end box
+    @enduml

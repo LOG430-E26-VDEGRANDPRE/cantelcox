@@ -1,0 +1,83 @@
+@startuml
+title Modèle du domaine - Usage, tarification et facturation
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+skinparam object<<Agrégat>> {
+BackgroundColor #APPLICATION
+}
+left to right direction
+package "Usage, tarification et facturation" as BC5 #IMPLEMENTATION {
+
+object BillCycle <<Entité>> {
++id : UUID
++name : String
++description : String
++billingDate : DateTime
++billingPeriod : String
++chargeDate : DateTime
++mailingDate : DateTime
++paymentDueDate : DateTime
++validFor : TimePeriod
+}
+object Payment <<Entité>> {
++id : UUID
++paymentDate : DateTime
++amount : Money
+}
+object CustomerBill <<Agrégat>> {
++id : UUID
++amountDue : Money
++billDate : DateTime
++nextBillDate : DateTime
++billNo : String
++billDocumentHREF : String
++remainingAmount : Money
++paymentDueDate : DateTime
++taxItem : TaxAmount []
++runType : String
++status: CustomerBillState
+}
+object AppliedCustomerBillingRate <<Entité>> {
++id : UUID
++name : String
++date : DateTime
++appliedTax : TaxAmount []
++periodCoverage : TimePeriod
++taxIncludedAmount : Money
++taxExcludedAmount : Money
+}
+object BillingAccount <<Entité>> {
++id : UUID
++accountBalance: Amount
++name: String
+}
+object Usage <<Agrégat>> {
++id : UUID
++name: String
++description : String
++usageDate : DateTime
++usageType : String
++originatingCountryCode : String
++originatingNumber : String
++destinationCountryCode: String
++destinationNumber : String
++durationSec : Integer
++startDateTime : DateTime
++endDateTime : DateTime
++status : Enum
+}
+object RatedProductUsage <<Entité>> {
++id : UUID
++isBilled : Boolean
++isTaxExempt : Boolean
++ratingDate : DateTime
++usageRatingTag : String
++bucketValueConvertedInAmount : Money
+}
+}
+AppliedCustomerBillingRate *--> "0..1" CustomerBill : bill
+Payment <--* "0..*" CustomerBill : appliedPayment
+CustomerBill *--> "0..*" RatedProductUsage : usagesFacturables
+BillCycle "0..1" <--* CustomerBill : billCycle
+CustomerBill *--> "0..1" BillingAccount : billingAccount
+Usage *--> "0..*" RatedProductUsage : ratedProductUsage
+@enduml

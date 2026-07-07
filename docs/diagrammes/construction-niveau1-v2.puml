@@ -1,0 +1,48 @@
+
+@startuml
+title
+Vue de construction
+Niveau 1
+endtitle
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+
+skinparam component {
+BackgroundColor #RoyalBlue
+FontColor #GhostWhite
+}
+skinparam component<<service>> {
+BackgroundColor #MOTIVATION
+FontColor #Black
+}
+actor Usager
+cloud Internet
+component "API Gateway" as API
+[Clients] <<Service>>
+[Lignes] <<Service>>
+[Commandes] <<Service>>
+[Catalogue] <<Service>>
+[Facturation] <<Service>>
+[Audit] <<Service>>
+[Orchestration] <<Service>>
+
+Usager --> Internet : utilise
+Internet -- API : IP publique
+
+API --> Orchestration : prise de commande\nfacturation mensuelle
+API --> Clients : profil, identité\n et authentification
+API --> Lignes : consultation\n des usages
+API --> Commandes : consultation\n des commandes
+API --> Catalogue : consultation des\n offres de produit
+API --> Facturation : consultation\n des factures
+API --> Audit : consultation\n des événements
+
+Orchestration ---> Commandes : création
+Commandes --> Catalogue : choix forfait
+Orchestration -> Lignes : activation\n numéro
+Orchestration --> Clients : valide MFA
+Orchestration --> Facturation : production
+Orchestration --> Audit : vérification\nanti-fraude
+Orchestration --> Lignes : tarification
+Clients --> Audit : vérification\nidentité
+
+@enduml

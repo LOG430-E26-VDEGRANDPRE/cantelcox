@@ -1,0 +1,51 @@
+@startuml
+title Modèle du domaine - Commandes et activations
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+skinparam object<<Agrégat>> {
+BackgroundColor #APPLICATION
+}
+left to right direction
+package "Commandes et activations" as BC3 #TECHNOLOGY {
+
+object ProductOrder <<Agrégat>> {
++id : UUID
++orderTotalPrice : OrderPrice
++cancellationDate : DateTime
++category : String
++creationDate : DateTime
++completionDate : DateTime
++description : String
+}
+
+object ProductOrderItem <<Entité>> {
++id : UUID
++itemTotalPrice : OrderPrice
++itemPrice : OrderPrice
++quantity : Integer
++description : String
+}
+
+object OrderStatus <<Enum>> {
+Acknowledged
+Pending
+InProgress
+Held
+Completed
+Failed
+Partial
+Cancelled
+Rejected
+}
+
+object Product <<Agrégat>> {
++id : UUID
++name : String
++type : String
+}
+}
+
+ProductOrder -- "1" OrderStatus : state
+ProductOrder *--> "0..*" ProductOrderItem : productOrderItem
+ProductOrderItem *--> "0..1" Product : product
+
+@enduml
