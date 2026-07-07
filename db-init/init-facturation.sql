@@ -2,10 +2,10 @@
 SET NAMES 'utf8mb4';
 
 -- Create database
-CREATE DATABASE IF NOT EXISTS bd_facturation CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE bd_facturation;
+CREATE DATABASE IF NOT EXISTS customerbills CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE customerbills;
 
-GRANT ALL PRIVILEGES ON bd_facturation.* TO 'cantelcox'@'%';
+GRANT ALL PRIVILEGES ON customerbills.* TO 'cantelcox'@'%';
 
 -- BillCycle table
 DROP TABLE IF EXISTS billcycles;
@@ -53,6 +53,20 @@ CREATE TABLE payments (
     customerbill_id INT NOT NULL,
     is_processed BIT,
     FOREIGN KEY (customerbill_id) REFERENCES customerbills(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Patron d'idempotence
+DROP TABLE IF EXISTS idempotency_keys;
+CREATE TABLE idempotency_keys (
+    idempotency_key VARCHAR(255) NOT NULL,
+    request_hash VARCHAR(64) NOT NULL,
+    status ENUM('PENDING', 'COMPLETED', 'FAILED') NOT NULL DEFAULT 'PENDING',
+    response_code INT NULL,
+    response_body TEXT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (idempotency_key),
+    UNIQUE(idempotency_key)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO billcycles (name, description) VALUES ('202607', 'Cycle de facturation initial');

@@ -2,10 +2,10 @@
 SET NAMES 'utf8mb4';
 
 -- Create database
-CREATE DATABASE IF NOT EXISTS bd_clients CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE bd_clients;
+CREATE DATABASE IF NOT EXISTS partys CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE partys;
 
-GRANT ALL PRIVILEGES ON bd_clients.* TO 'cantelcox'@'%';
+GRANT ALL PRIVILEGES ON partys.* TO 'cantelcox'@'%';
 
 -- Party table
 DROP TABLE IF EXISTS party;
@@ -24,6 +24,8 @@ CREATE TABLE party (
     street2 VARCHAR(50),
     isOrganization BIT,
     username VARCHAR(75),
+    subscriberId VARCHAR(32),
+    subscribedAt DATETIME,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     partyStatus VARCHAR(25) DEFAULT 'ACTIVE'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

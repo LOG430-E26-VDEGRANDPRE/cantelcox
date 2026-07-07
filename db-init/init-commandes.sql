@@ -2,10 +2,10 @@
 SET NAMES 'utf8mb4';
 
 -- Create database
-CREATE DATABASE IF NOT EXISTS bd_commandes CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE bd_commandes;
+CREATE DATABASE IF NOT EXISTS productorders CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE productorders;
 
-GRANT ALL PRIVILEGES ON bd_commandes.* TO 'cantelcox'@'%';
+GRANT ALL PRIVILEGES ON productorders.* TO 'cantelcox'@'%';
 
 -- Order table
 DROP TABLE IF EXISTS orders;
@@ -47,6 +47,20 @@ CREATE TABLE order_items (
     description VARCHAR(255),
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Patron d'idempotence
+DROP TABLE IF EXISTS idempotency_keys;
+CREATE TABLE idempotency_keys (
+    idempotency_key VARCHAR(255) NOT NULL,
+    request_hash VARCHAR(64) NOT NULL,
+    status ENUM('PENDING', 'COMPLETED', 'FAILED') NOT NULL DEFAULT 'PENDING',
+    response_code INT NULL,
+    response_body TEXT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (idempotency_key),
+    UNIQUE(idempotency_key)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO products (name, productOfferingRef, serviceRef, price, type) VALUES

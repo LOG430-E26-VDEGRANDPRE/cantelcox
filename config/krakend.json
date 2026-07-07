@@ -24,6 +24,26 @@
       "metrics": {
         "disabled": true
       }
+    },
+    "security/cors": {
+      "allow_origins": [
+        "*"
+      ],
+      "allow_methods": [
+        "GET",
+        "PATCH",
+        "POST"
+      ],
+      "expose_headers": [
+        "Content-Length",
+        "Content-Type"
+      ],
+      "allow_headers": [
+        "Accept-Language"
+      ],
+      "max_age": "12h",
+      "allow_credentials": false,
+      "debug": false
     }
   },
   "endpoints": [
@@ -72,25 +92,6 @@
       ]
     },
     {
-      "endpoint": "/commandes/v1/orders",
-      "method": "POST",
-      "input_headers": ["*"],
-      "extra_config": {
-        "auth/validator": {
-          "alg": "RS256",
-          "jwk_url": "http://keycloak:8080/realms/cantelcox/protocol/openid-connect/certs",
-          "disable_jwk_security": true
-        }
-      },
-      "backend": [
-        {
-          "url_pattern": "/v1/orders",
-          "host": ["http://svc_commandes:5000"],
-          "timeout": "5s"
-        }
-      ]
-    },
-    {
       "endpoint": "/commandes/v1/orders/{order_id}",
       "method": "GET",
       "input_headers": ["*"],
@@ -113,6 +114,13 @@
       "endpoint": "/facturation/v1/paiement/{payment_id}",
       "method": "PATCH",
       "input_headers": ["*"],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/cantelcox/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      },
       "backend": [
         {
           "url_pattern": "/v1/payments/process/{payment_id}",
@@ -184,7 +192,7 @@
       ]
     },
     {
-      "endpoint": "/facturation/v1/client/{customerbill_id}",
+      "endpoint": "/facturation/v1/client/{party_id}",
       "method": "GET",
       "input_headers": ["*"],
       "extra_config": {
@@ -196,26 +204,7 @@
       },
       "backend": [
         {
-          "url_pattern": "/v1/customerbills/party/{customerbill_id}",
-          "host": ["http://svc_facturation:5000"],
-          "timeout": "5s"
-        }
-      ]
-    },
-    {
-      "endpoint": "/facturation/v1/paiement",
-      "method": "POST",
-      "input_headers": ["*"],
-      "extra_config": {
-        "auth/validator": {
-          "alg": "RS256",
-          "jwk_url": "http://keycloak:8080/realms/cantelcox/protocol/openid-connect/certs",
-          "disable_jwk_security": true
-        }
-      },
-      "backend": [
-        {
-          "url_pattern": "/v1/payments",
+          "url_pattern": "/v1/customerbills/party/{party_id}",
           "host": ["http://svc_facturation:5000"],
           "timeout": "5s"
         }
