@@ -28,7 +28,7 @@ CREATE TABLE party (
     subscribedAt DATETIME,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     partyStatus VARCHAR(25) DEFAULT 'ACTIVE',
-    UNIQUE(subscriberId)
+    UNIQUE(subscriberId, username)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO party (firstName, lastName, uuid, email, username) VALUES
