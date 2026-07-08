@@ -1,3 +1,4 @@
+git clone https://github.com/LOG430-E26-VDEGRANDPRE/svc-orchestration.git
 git clone https://github.com/LOG430-E26-VDEGRANDPRE/svc-commandes.git
 git clone https://github.com/LOG430-E26-VDEGRANDPRE/svc-lignes.git
 git clone https://github.com/LOG430-E26-VDEGRANDPRE/svc-catalogue.git
