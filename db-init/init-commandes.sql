@@ -12,7 +12,7 @@ DROP TABLE IF EXISTS orders;
 CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     partyRef INT NOT NULL,
-    orderTotalPrice DECIMAL(12,2) NOT NULL,
+    orderTotalPrice DECIMAL(12,2) NOT NULL DEFAULT 0,
     cancellationDate DATETIME,
     category VARCHAR(25),
     payment_link VARCHAR(100),

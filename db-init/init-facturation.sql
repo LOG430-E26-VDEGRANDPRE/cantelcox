@@ -52,7 +52,7 @@ CREATE TABLE payments (
     amount DECIMAL(12,2) NOT NULL DEFAULT 0,
     customerbill_id INT NOT NULL,
     is_processed BIT,
-    FOREIGN KEY (customerbill_id) REFERENCES customerbills(id) ON DELETE CASCADE
+    FOREIGN KEY (customerbill_id) REFERENCES customerbills(id) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Patron d'idempotence

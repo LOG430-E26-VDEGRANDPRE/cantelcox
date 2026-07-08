@@ -15,8 +15,8 @@ services:
       sh -c "cp /db_clients/init.sql /data/init-clients.sql;
             cp /db_commandes/init.sql /data/init-commandes.sql;
             cp /db_facturation/init.sql /data/init-facturation.sql;
-            cp /scripts_catalogue/*.js /scripts/;
-            cp /scripts_facturation/*.js /scripts/;"
+            cp /scripts_catalogue/* /scripts/;
+            cp /scripts_facturation/* /scripts/;"
 
   mysql:
     image: mysql:8.4.7
