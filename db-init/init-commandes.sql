@@ -19,6 +19,7 @@ CREATE TABLE orders (
     is_paid BOOLEAN,
     creationDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     completionDate DATETIME,
+    orderStatus ENUM('DRAFT', 'CREATED', 'CANCELLED', 'FULFILLED') NOT NULL DEFAULT 'DRAFT',
     description VARCHAR(255)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
