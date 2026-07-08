@@ -263,8 +263,11 @@ Chaque microservice possède son propre fichier `docker-compose.yml` pour le dé
 ### Démarrage Local
 
 1. Cloner le dépôt
-2. Cloner tous les autres dépôts à la racine de celui-ci
-2. Naviguer à la racine de ce projet et exécuter :
+2. Cloner tous les autres dépôts à la racine de celui-ci, naviguer à la racine de ce projet et exécuter :
+   ```bash
+   /bin/sh ./get_projets.sh
+   ```
+3. Toujours à la racine de ce projet, exécutez :
    ```bash
    docker network create cantelcox-network
    docker compose build
