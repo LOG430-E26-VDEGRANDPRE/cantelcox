@@ -46,6 +46,10 @@ services:
       start_period: 1s
     depends_on:
       - copie-initdb-services
+    ulimits:
+      nofile:
+        soft: 20000
+        hard: 40000
 
   mongo:
     image: mongo:6
