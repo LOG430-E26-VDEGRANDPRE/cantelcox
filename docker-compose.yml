@@ -15,6 +15,7 @@ services:
       sh -c "cp /db_clients/init.sql /data/init-clients.sql;
             cp /db_commandes/init.sql /data/init-commandes.sql;
             cp /db_facturation/init.sql /data/init-facturation.sql;
+            cp /db_facturation/test-data.sql /data/test-facturation.sql;
             cp /scripts_catalogue/* /scripts/;
             cp /scripts_facturation/* /scripts/;"
 

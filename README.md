@@ -7,6 +7,33 @@
 
 CanTelcoX est une architecture de microservices conçue pour un opérateur mobile canadien, implémentant un système complet de gestion des clients, des commandes, de la facturation et des services mobiles. Le système suit les principes de l'architecture hexagonale et utilise des technologies modernes pour assurer la scalabilité, la résilience et l'observabilité.
 
+## Déploiement
+
+Chaque microservice possède son propre fichier `docker-compose.yml` pour le déploiement local. Le système est conçu pour être déployé dans un environnement Kubernetes en production.
+
+### Prérequis
+
+- Docker et Docker Compose
+- Python 3.9+
+- Accès à un registre Docker (pour les images personnalisées)
+
+### Démarrage Local
+
+1. Cloner le dépôt
+2. Cloner tous les autres dépôts à la racine de celui-ci, naviguer à la racine de ce projet et exécuter :
+   ```bash
+   /bin/sh ./get_projets.sh
+   ```
+3. Toujours à la racine de ce projet, exécutez :
+   ```bash
+   docker network create cantelcox-network
+   docker compose build
+   docker compose up -d
+   docker compose rm -f
+   ```
+
+4. Attendez que le service Keycloak ait terminé de s'initialiser au complet avant de pouvoir utiliser le système (autrement vous aurez des erreurs 500 sur les opérations qui nécessitent une authentification). Testable via Postman.
+
 ## Architecture Globale
 
 Le système est composé de 7 microservices principaux, chacun responsable d'un domaine métier spécifique :
@@ -249,31 +276,6 @@ Les bounded contexts identifiés sont :
 - **OAuth2** : Intégration avec Keycloak
 - **MFA** : Authentification multi-facteurs
 - **HTTPS** : Communication sécurisée
-
-## Déploiement
-
-Chaque microservice possède son propre fichier `docker-compose.yml` pour le déploiement local. Le système est conçu pour être déployé dans un environnement Kubernetes en production.
-
-### Prérequis
-
-- Docker et Docker Compose
-- Python 3.9+
-- Accès à un registre Docker (pour les images personnalisées)
-
-### Démarrage Local
-
-1. Cloner le dépôt
-2. Cloner tous les autres dépôts à la racine de celui-ci, naviguer à la racine de ce projet et exécuter :
-   ```bash
-   /bin/sh ./get_projets.sh
-   ```
-3. Toujours à la racine de ce projet, exécutez :
-   ```bash
-   docker network create cantelcox-network
-   docker compose build
-   docker compose up -d
-   docker compose rm -f
-   ```
 
 ## Architecture Hexagonale
 
