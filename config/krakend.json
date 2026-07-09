@@ -55,7 +55,7 @@
         {
           "url_pattern": "/v1/party",
           "host": ["http://svc_clients:5000"],
-          "timeout": "5s"
+          "timeout": "15s"
         }
       ]
     },
@@ -67,7 +67,7 @@
         {
           "url_pattern": "/v1/auth",
           "host": ["http://svc_clients:5000"],
-          "timeout": "5s"
+          "timeout": "15s"
         }
       ]
     },
@@ -87,7 +87,7 @@
         {
           "url_pattern": "/v1/party/{party_id}",
           "host": ["http://svc_clients:5000"],
-          "timeout": "5s"
+          "timeout": "15s"
         }
       ]
     },
@@ -106,7 +106,7 @@
         {
           "url_pattern": "/v1/orders/{order_id}",
           "host": ["http://svc_commandes:5000"],
-          "timeout": "5s"
+          "timeout": "15s"
         }
       ]
     },
@@ -125,7 +125,7 @@
         {
           "url_pattern": "/v1/payments/process/{payment_id}",
           "host": ["http://svc_facturation:5000"],
-          "timeout": "5s"
+          "timeout": "15s"
         }
       ]
     },
@@ -156,7 +156,7 @@
         {
           "url_pattern": "/v1/productofferings",
           "host": ["http://svc_catalogue:5000"],
-          "timeout": "5s"
+          "timeout": "15s"
         }
       ]
     },
@@ -168,7 +168,7 @@
         {
           "url_pattern": "/v1/productoffering/{references}",
           "host": ["http://svc_catalogue:5000"],
-          "timeout": "5s"
+          "timeout": "15s"
         }
       ]
     },
@@ -187,7 +187,7 @@
         {
           "url_pattern": "/v1/customerbills/{customerbill_id}",
           "host": ["http://svc_facturation:5000"],
-          "timeout": "5s"
+          "timeout": "15s"
         }
       ]
     },
@@ -206,7 +206,7 @@
         {
           "url_pattern": "/v1/customerbills/party/{party_id}",
           "host": ["http://svc_facturation:5000"],
-          "timeout": "5s"
+          "timeout": "15s"
         }
       ]
     }
