@@ -32,7 +32,7 @@ Chaque microservice possède son propre fichier `docker-compose.yml` pour le dé
    docker compose rm -f
    ```
 
-4. Le démarrage complet peut être long pour que Keycloak et MySQL aient terminé de s'initialiser au complet. (environ 75 secondes).
+4. Le démarrage complet peut être long pour que Keycloak et MySQL aient terminé de s'initialiser au complet. (environ 75 secondes à 2 minutes).
 
 5. Testable via Postman.
 

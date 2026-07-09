@@ -144,7 +144,7 @@
         {
           "url_pattern": "/v1/saga/order",
           "host": ["http://svc_orchestration:5123"],
-          "timeout": "5s"
+          "timeout": "15s"
         }
       ]
     },
