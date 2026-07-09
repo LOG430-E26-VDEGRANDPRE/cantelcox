@@ -32,7 +32,9 @@ Chaque microservice possède son propre fichier `docker-compose.yml` pour le dé
    docker compose rm -f
    ```
 
-4. Attendez que le service Keycloak ait terminé de s'initialiser au complet avant de pouvoir utiliser le système (autrement vous aurez des erreurs 500 sur les opérations qui nécessitent une authentification). Testable via Postman.
+4. Le démarrage complet peut être long pour que Keycloak et MySQL aient terminé de s'initialiser au complet. (environ 75 secondes).
+
+5. Testable via Postman.
 
 ## Architecture Globale
 
