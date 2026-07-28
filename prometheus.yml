@@ -3,7 +3,43 @@ global:
   evaluation_interval: 10s
 
 scrape_configs:
-  - job_name: 'svc_clients'
+  - job_name: "prometheus"
     static_configs:
-      - targets: ['svc_clients:5000']
-    scrape_interval: 5s
+      - targets:
+          - "prometheus:9090"
+
+  - job_name: "svc_clients"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets:
+          - "svc_clients:5000"
+
+  - job_name: "svc_commandes"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets:
+          - "svc_commandes:5000"
+
+  - job_name: "svc_catalogue"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets:
+          - "svc_catalogue:5000"
+
+  - job_name: "svc_facturation"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets:
+          - "svc_facturation:5000"
+
+  - job_name: "svc_orchestration"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets:
+          - "svc_orchestration:5123"
+
+  - job_name: "usage_api"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets:
+          - "usage-api:8080"
