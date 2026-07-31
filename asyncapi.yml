@@ -24,13 +24,303 @@ channels:
   alerteFraude:
     address: cantelcox.audit.1.0.event.alerte.fraude
     description: Avis de détection d'une fraude
+    tags:
+      - name: domaine
     bindings:
       kafka:
         topic: audit.alerte-fraude
         bindingVersion: '0.5.0'
     messages:
-      detectionFraude:
-        $ref: '#/components/messages/detectionFraude'
+      DetectionFraude:
+        $ref: '#/components/messages/DetectionFraude'
+  abusUsage:
+    address: cantelcox.audit.1.0.event.abus.usage
+    description: Avis d'abus d'usage de service
+    tags:
+      - name: domaine
+    bindings:
+      kafka:
+        topic: audit.abus-usage
+        bindingVersion: '0.5.0'
+    messages:
+      AbusUsage:
+        $ref: '#/components/messages/AbusUsage'
+  offeringsVerified:
+    address: cantelcox.catalogue.1.0.event.offerings.verified
+    description: Avis que les offres commerciales sont vérifiées
+    tags:
+      - name: domaine
+    bindings:
+      kafka:
+        topic: catalogue.offerings-verified
+        bindingVersion: '0.5.0'
+    messages:
+      OfferingsVerified:
+        $ref: '#/components/messages/OfferingsVerified'
+  offeringsInvalid:
+    address: cantelcox.catalogue.1.0.event.offerings.invalid
+    description: Avis que les offres commerciales sont invalides
+    tags:
+      - name: compensation
+    bindings:
+      kafka:
+        topic: catalogue.offerings-invalid
+        bindingVersion: '0.5.0'
+    messages:
+      OfferingsInvalid:
+        $ref: '#/components/messages/OfferingsInvalid'
+  stockDecreased:
+    address: cantelcox.catalogue.1.0.event.stock.decreased
+    description: Avis que le stock a été réduit
+    tags:
+      - name: domaine
+    bindings:
+      kafka:
+        topic: catalogue.stock-decreased
+        bindingVersion: '0.5.0'
+    messages:
+      StockDecreased:
+        $ref: '#/components/messages/StockDecreased'
+  stockIncreased:
+    address: cantelcox.catalogue.1.0.event.stock.increased
+    description: Avis que le stock a été augmenté
+    tags:
+      - name: compensation
+    bindings:
+      kafka:
+        topic: catalogue.stock-increased
+        bindingVersion: '0.5.0'
+    messages:
+      StockIncreased:
+        $ref: '#/components/messages/StockIncreased'
+  orderSagaSubmitted:
+    address: cantelcox.saga.1.0.event.order.submitted
+    description: Avis que la saga de création de commande est soumise
+    tags:
+      - name: domaine
+    bindings:
+      kafka:
+        topic: saga.order-submitted
+        bindingVersion: '0.5.0'
+    messages:
+      OrderSagaSubmitted:
+        $ref: '#/components/messages/OrderSagaSubmitted'
+  orderValidationsOk:
+    address: cantelcox.saga.1.0.event.order.validations.ok
+    description: Avis que les validations d'une saga de commande sont correctes
+    tags:
+      - name: domaine
+    bindings:
+      kafka:
+        topic: saga.order-validations-ok
+        bindingVersion: '0.5.0'
+    messages:
+      OrderValidationsOk:
+        $ref: '#/components/messages/OrderValidationsOk'
+  orderValidationsKo:
+    address: cantelcox.saga.1.0.event.order.validations.ko
+    description: Avis que les validations d'une saga de commande sont incorrectes
+    tags:
+      - name: compensation
+    bindings:
+      kafka:
+        topic: saga.order-validations-ko
+        bindingVersion: '0.5.0'
+    messages:
+      OrderValidationsKo:
+        $ref: '#/components/messages/OrderValidationsKo'
+  doProvisionActions:
+    address: cantelcox.saga.1.0.action.provision.do
+    description: Avis d'exéction les actions de provisoinner (activer) les services d'une commande
+    tags:
+      - name: domaine
+    bindings:
+      kafka:
+        topic: saga.order-do-provision
+        bindingVersion: '0.5.0'
+    messages:
+      DoProvisionActions:
+        $ref: '#/components/messages/DoProvisionActions'
+  doInvoicing:
+    address: cantelcox.saga.1.0.action.invoicing.do
+    description: Avis d'exéction de l'action de facturer la commande
+    tags:
+      - name: domaine
+    bindings:
+      kafka:
+        topic: saga.order-do-invoicing
+        bindingVersion: '0.5.0'
+    messages:
+      DoInvoicing:
+        $ref: '#/components/messages/DoInvoicing'
+  orderSagaEnded:
+    address: cantelcox.saga.1.0.event.saga.order.ended
+    description: Avis que la saga de commande est terminée
+    tags:
+      - name: domaine
+    bindings:
+      kafka:
+        topic: saga.order-ended
+        bindingVersion: '0.5.0'
+    messages:
+      OrderSagaEnded:
+        $ref: '#/components/messages/OrderSagaEnded'
+  buyerVerified:
+    address: cantelcox.client.1.0.event.buyer.verified
+    description: Avis que le client a été vérifié avec succès
+    tags:
+      - name: domaine
+    bindings:
+      kafka:
+        topic: client.buyer-verified
+        bindingVersion: '0.5.0'
+    messages:
+      BuyerVerified:
+        $ref: '#/components/messages/BuyerVerified'
+  buyerInvalid:
+    address: cantelcox.client.1.0.event.buyer.invalid
+    description: Avis que la validation du client est incorrecte
+    tags:
+      - name: compensation
+    bindings:
+      kafka:
+        topic: client.buyer-invalid
+        bindingVersion: '0.5.0'
+    messages:
+      BuyerInvalid:
+        $ref: '#/components/messages/BuyerInvalid'
+  partyIdentified:
+    address: cantelcox.client.1.0.event.party.identified
+    description: Avis que l'abonné a été identifié
+    tags:
+      - name: domaine
+    bindings:
+      kafka:
+        topic: client.party-identified
+        bindingVersion: '0.5.0'
+    messages:
+      PartyIdentified:
+        $ref: '#/components/messages/PartyIdentified'
+  orderDraft:
+    address: cantelcox.commande.1.0.event.order.draft
+    description: Avis que la commande est à l'état brouillon
+    tags:
+      - name: domaine
+    bindings:
+      kafka:
+        topic: commande.order-draft
+        bindingVersion: '0.5.0'
+    messages:
+      OrderDraft:
+        $ref: '#/components/messages/OrderDraft'
+  orderCreated:
+    address: cantelcox.commande.1.0.event.order.created
+    description: Avis que la commande est à l'état créée
+    tags:
+      - name: domaine
+    bindings:
+      kafka:
+        topic: commande.order-created
+        bindingVersion: '0.5.0'
+    messages:
+      OrderCreated:
+        $ref: '#/components/messages/OrderCreated'
+  orderCancelled:
+    address: cantelcox.commande.1.0.event.order.cancelled
+    description: Avis que la commande est à l'état annulée
+    tags:
+      - name: compensation
+    bindings:
+      kafka:
+        topic: commande.order-cancelled
+        bindingVersion: '0.5.0'
+    messages:
+      OrderCancelled:
+        $ref: '#/components/messages/OrderCancelled'
+  billcycleCreated:
+    address: cantelcox.facturation.1.0.event.billcycle.created
+    description: Avis que le cycle de facturation est créé
+    tags:
+      - name: domaine
+    bindings:
+      kafka:
+        topic: facturation.billcycle-created
+        bindingVersion: '0.5.0'
+    messages:
+      BillcycleCreated:
+        $ref: '#/components/messages/BillcycleCreated'
+  customerbillCreated:
+    address: cantelcox.facturation.1.0.event.customerbill.created
+    description: Avis que la facture client est créée
+    tags:
+      - name: domaine
+    bindings:
+      kafka:
+        topic: facturation.customerbill-created
+        bindingVersion: '0.5.0'
+    messages:
+      CustomerbillCreated:
+        $ref: '#/components/messages/CustomerbillCreated'
+  paymentProcessed:
+    address: cantelcox.facturation.1.0.event.payment.processed
+    description: Avis qu'un paiment a été traité
+    tags:
+      - name: domaine
+    bindings:
+      kafka:
+        topic: facturation.payment-processed
+        bindingVersion: '0.5.0'
+    messages:
+      PaymentProcessed:
+        $ref: '#/components/messages/PaymentProcessed'
+  paymentDelinquant:
+    address: cantelcox.facturation.1.0.event.payment.delinquant
+    description: Avis qu'un paiment n'a pas été traité et que le client est en délinquence
+    tags:
+      - name: compensation
+    bindings:
+      kafka:
+        topic: facturation.payment-delinquant
+        bindingVersion: '0.5.0'
+    messages:
+      PaymentDelinquant:
+        $ref: '#/components/messages/PaymentDelinquant'
+  serviceVerified:
+    address: cantelcox.lignes.1.0.event.service.verified
+    description: Avis qu'une élligibilité de service est vérifiée
+    tags:
+      - name: domaine
+    bindings:
+      kafka:
+        topic: lignes.service-verified
+        bindingVersion: '0.5.0'
+    messages:
+      ServiceVerified:
+        $ref: '#/components/messages/ServiceVerified'
+  serviceProvisionOk:
+    address: cantelcox.lignes.1.0.event.service.provision.ok
+    description: Avis qu'une activation de service est complétée avec succès
+    tags:
+      - name: domaine
+    bindings:
+      kafka:
+        topic: lignes.service-provision-ok
+        bindingVersion: '0.5.0'
+    messages:
+      ServiceProvisionOk:
+        $ref: '#/components/messages/ServiceProvisionOk'
+  serviceProvisionKo:
+    address: cantelcox.lignes.1.0.event.service.provision.ko
+    description: Avis qu'une activation de service n'a pas réussie
+    tags:
+      - name: compensation
+    bindings:
+      kafka:
+        topic: lignes.service-provisi
+        bindingVersion: '0.5.0'
+    messages:
+      ServiceProvisionKo:
+        $ref: '#/components/messages/ServiceProvisionKo'
 
 operations:
   receptionAlerteFraude:
@@ -42,12 +332,252 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/antifraude'
     messages:
-      - $ref: '#/channels/alerteFraude/messages/detectionFraude'
+      - $ref: '#/channels/alerteFraude/messages/DetectionFraude'
+  receptionAbusUsage:
+    action: receive
+    channel:
+      $ref: '#/channels/abusUsage'
+    summary: >-
+      Réagir quand un abus d'usage est détecté.
+    traits:
+      - $ref: '#/components/operationTraits/abususage'
+    messages:
+      - $ref: '#/channels/abusUsage/messages/AbusUsage'
+  receptionOfferingsVerified:
+    action: receive
+    channel:
+      $ref: '#/channels/offeringsVerified'
+    summary: >-
+      Réagir quand les offres sont vérifiées.
+    traits:
+      - $ref: '#/components/operationTraits/saga'
+    messages:
+      - $ref: '#/channels/offeringsVerified/messages/OfferingsVerified'
+  receptionOfferingsInvalid:
+    action: receive
+    channel:
+      $ref: '#/channels/offeringsInvalid'
+    summary: >-
+      Réagir quand les offres sont invalides.
+    traits:
+      - $ref: '#/components/operationTraits/saga'
+    messages:
+      - $ref: '#/channels/offeringsInvalid/messages/OfferingsInvalid'
+  receptionStockDecreased:
+    action: receive
+    channel:
+      $ref: '#/channels/stockDecreased'
+    summary: >-
+      Réagir quand les stocks sont déduits.
+    traits:
+      - $ref: '#/components/operationTraits/saga'
+    messages:
+      - $ref: '#/channels/stockDecreased/messages/StockDecreased'
+  receptionStockIncreased:
+    action: receive
+    channel:
+      $ref: '#/channels/stockIncreased'
+    summary: >-
+      Réagir quand les stocks sont augmentés suite à une compensation.
+    traits:
+      - $ref: '#/components/operationTraits/saga'
+    messages:
+      - $ref: '#/channels/stockIncreased/messages/StockIncreased'
+  receptionOrderSagaSubmitted:
+    action: receive
+    channel:
+      $ref: '#/channels/orderSagaSubmitted'
+    summary: >-
+      Réagir quand la saga de commnade est soumise.
+    traits:
+      - $ref: '#/components/operationTraits/auditcommande'
+    messages:
+      - $ref: '#/channels/orderSagaSubmitted/messages/OrderSagaSubmitted'
+  receptionOrderValidationsOk:
+    action: receive
+    channel:
+      $ref: '#/channels/orderValidationsOk'
+    summary: >-
+      Réagir quand la validation de la commande est bonne.
+    traits:
+      - $ref: '#/components/operationTraits/commande'
+    messages:
+      - $ref: '#/channels/orderValidationsOk/messages/OrderValidationsOk'
+  receptionOrderValidationsKo:
+    action: receive
+    channel:
+      $ref: '#/channels/orderValidationsKo'
+    summary: >-
+      Réagir quand la validation de la commande est incorrecte.
+    traits:
+      - $ref: '#/components/operationTraits/auditclient'
+    messages:
+      - $ref: '#/channels/orderValidationsKo/messages/OrderValidationsKo'
+  publierDoProvisionActions:
+    action: send
+    channel:
+      $ref: '#/channels/doProvisionActions'
+    summary: >-
+      Demander l'activation de services.
+    traits:
+      - $ref: '#/components/operationTraits/auditligne'
+    messages:
+      - $ref: '#/channels/doProvisionActions/messages/DoProvisionActions'
+  publierDoInvoicing:
+    action: send
+    channel:
+      $ref: '#/channels/doInvoicing'
+    summary: >-
+      Demander la génération de la facturation en lot périodique.
+    traits:
+      - $ref: '#/components/operationTraits/auditfacturation'
+    messages:
+      - $ref: '#/channels/doInvoicing/messages/DoInvoicing'
+  recevoirOrderSagaEnded:
+    action: receive
+    channel:
+      $ref: '#/channels/orderSagaEnded'
+    summary: >-
+      Réagir quand la saga de commande est terminée
+    traits:
+      - $ref: '#/components/operationTraits/auditclient'
+    messages:
+      - $ref: '#/channels/orderSagaEnded/messages/OrderSagaEnded'
+  recevoirBuyerVerified:
+    action: receive
+    channel:
+      $ref: '#/channels/buyerVerified'
+    summary: >-
+      Réagir quand le client est vérifié
+    traits:
+      - $ref: '#/components/operationTraits/saga'
+    messages:
+      - $ref: '#/channels/buyerVerified/messages/BuyerVerified'
+  recevoirBuyerInvalid:
+    action: receive
+    channel:
+      $ref: '#/channels/buyerInvalid'
+    summary: >-
+      Réagir quand la vérification du client est invalide
+    traits:
+      - $ref: '#/components/operationTraits/saga'
+    messages:
+      - $ref: '#/channels/buyerInvalid/messages/BuyerInvalid'
+  recevoirPartyIdentified:
+    action: receive
+    channel:
+      $ref: '#/channels/partyIdentified'
+    summary: >-
+      Réagir quand un abonné est identifié
+    traits:
+      - $ref: '#/components/operationTraits/audit'
+    messages:
+      - $ref: '#/channels/partyIdentified/messages/PartyIdentified'
+  recevoirOrderDraft:
+    action: receive
+    channel:
+      $ref: '#/channels/orderDraft'
+    summary: >-
+      Réagir quand une commande est en état brouillon (procéder aux vérifications)
+    traits:
+      - $ref: '#/components/operationTraits/clientcatalogueligne'
+    messages:
+      - $ref: '#/channels/orderDraft/messages/OrderDraft'
+  recevoirOrderCreated:
+    action: receive
+    channel:
+      $ref: '#/channels/orderCreated'
+    summary: >-
+      Réagir quand une commande est en état créée
+    traits:
+      - $ref: '#/components/operationTraits/auditcataloguesaga'
+    messages:
+      - $ref: '#/channels/orderCreated/messages/OrderCreated'
+  recevoirOrderCancelled:
+    action: receive
+    channel:
+      $ref: '#/channels/orderCancelled'
+    summary: >-
+      Réagir quand une commande est annulée (compensation)
+    traits:
+      - $ref: '#/components/operationTraits/auditcataloguesagaclient'
+    messages:
+      - $ref: '#/channels/orderCancelled/messages/OrderCancelled'
+  recevoirBillcycleCreated:
+    action: receive
+    channel:
+      $ref: '#/channels/billcycleCreated'
+    summary: >-
+      Réagir quand un cycle de facturation est créé
+    traits:
+      - $ref: '#/components/operationTraits/audit'
+    messages:
+      - $ref: '#/channels/billcycleCreated/messages/BillcycleCreated'
+  recevoirCustomerbillCreated:
+    action: receive
+    channel:
+      $ref: '#/channels/customerbillCreated'
+    summary: >-
+      Réagir quand une facture client est créée
+    traits:
+      - $ref: '#/components/operationTraits/auditclient'
+    messages:
+      - $ref: '#/channels/customerbillCreated/messages/CustomerbillCreated'
+  recevoirPaymentProcessed:
+    action: receive
+    channel:
+      $ref: '#/channels/paymentProcessed'
+    summary: >-
+      Réagir quand une facture client est créée
+    traits:
+      - $ref: '#/components/operationTraits/auditclient'
+    messages:
+      - $ref: '#/channels/paymentProcessed/messages/PaymentProcessed'
+  recevoirPaymentDelinquant:
+    action: receive
+    channel:
+      $ref: '#/channels/paymentDelinquant'
+    summary: >-
+      Réagir quand un paiement devient délinquant
+    traits:
+      - $ref: '#/components/operationTraits/auditclientlignecommande'
+    messages:
+      - $ref: '#/channels/paymentDelinquant/messages/PaymentDelinquant'
+  recevoirServiceVerified:
+    action: receive
+    channel:
+      $ref: '#/channels/serviceVerified'
+    summary: >-
+      Réagir quand un service est vérifié
+    traits:
+      - $ref: '#/components/operationTraits/saga'
+    messages:
+      - $ref: '#/channels/serviceVerified/messages/ServiceVerified'
+  recevoirServiceProvisionOk:
+    action: receive
+    channel:
+      $ref: '#/channels/serviceProvisionOk'
+    summary: >-
+      Réagir quand un service est activé avec succès
+    traits:
+      - $ref: '#/components/operationTraits/saga'
+    messages:
+      - $ref: '#/channels/serviceProvisionOk/messages/ServiceProvisionOk'
+  recevoirServiceProvisionKo:
+    action: receive
+    channel:
+      $ref: '#/channels/serviceProvisionKo'
+    summary: >-
+      Réagir quand l'activation d'un service a échouée
+    traits:
+      - $ref: '#/components/operationTraits/auditclient'
+    messages:
+      - $ref: '#/channels/serviceProvisionKo/messages/ServiceProvisionKo'
 
 components:
   messages:
-    detectionFraude:
-      name: detectionFraude
+    DetectionFraude:
+      name: DetectionFraude
       title: detection-fraude
       summary: >-
         Informe sur l'occurence d'une fraude
@@ -55,36 +585,221 @@ components:
       traits:
         - $ref: '#/components/messageTraits/commonHeaders'
       payload:
-        $ref: '#/components/schemas/detectionFraudePayload'
+        $ref: '#/components/schemas/DetectionFraudePayload'
+    AbusUsage:
+      name: AbusUsage
+      title: abus-usage
+      summary: >-
+        Informe sur l'occurence d'un abus d'usage de service
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/AbusUsagePayload'
+    OfferingsVerified:
+      name: OfferingsVerified
+      title: offerings-verified
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/OfferingsVerifiedPayload'
+    OfferingsInvalid:
+      name: OfferingsInvalid
+      title: offerings-invalid
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/OfferingsInvalidPayload'
+    StockDecreased:
+      name: StockDecreased
+      title: stock-decreased
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/StockPayload'
+    StockIncreased:
+      name: StockIncreased
+      title: stock-increased
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/StockPayload'
+    OrderSagaSubmitted:
+      name: OrderSagaSubmitted
+      title: order-saga-submitted
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/OrderSagaSubmittedPayload'
+    OrderValidationsOk:
+      name: OrderValidationsOk
+      title: order-validations-ok
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/OrderValidationsPayload'
+    OrderValidationsKo:
+      name: OrderValidationsKo
+      title: order-validations-ko
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/OrderValidationsPayload'
+    DoProvisionActions:
+      name: DoProvisionActions
+      title: do-provision-actions
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/DoProvisionActionsPayload'
+    DoInvoicing:
+      name: DoInvoicing
+      title: do-invoicing
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/DoInvoicingPayload'
+    OrderSagaEnded:
+      name: OrderSagaEnded
+      title: order-saga-ended
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/OrderSagaEndedPayload'
+    BuyerVerified:
+      name: BuyerVerified
+      title: buyer-verified
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/BuyerValidationPayload'
+    BuyerInvalid:
+      name: BuyerInvalid
+      title: buyer-invalid
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/BuyerValidationPayload'
+    PartyIdentified:
+      name: PartyIdentified
+      title: party-identified
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/PartyIdentifiedPayload'
+    OrderDraft:
+      name: OrderDraft
+      title: order-draft
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/OrderStatePayload'
+    OrderCreated:
+      name: OrderCreated
+      title: order-created
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/OrderStatePayload'
+    OrderCancelled:
+      name: OrderCanceled
+      title: order-cancelled
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/OrderStatePayload'
+    BillcycleCreated:
+      name: BillcycleCreated
+      title: billcycle-created
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/BillcycleCreatedPayload'
+    CustomerbillCreated:
+      name: CustomerbillCreated
+      title: customerbill-created
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/CustomerbillCreatedPayload'
+    PaymentProcessed:
+      name: PaymentProcessed
+      title: payment-processed
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/PaymentProcessedPayload'
+    PaymentDelinquant:
+      name: PaymentDelinquant
+      title: payment-delinquant
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/PaymentDelinquantPayload'
+    ServiceVerified:
+      name: ServiceVerified
+      title: service-verified
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/ServiceVerifiedPayload'
+    ServiceProvisionOk:
+      name: ServiceProvisionOk
+      title: service-provision-ok
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/ServiceProvisionPayload'
+    ServiceProvisionKo:
+      name: ServiceProvisionKo
+      title: service-provision-ko
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/ServiceProvisionPayload'
+
+  correlationIds:
+    default:
+      description: Identifiant métier de corrélation (clé d'idempotence)
+      location: $message.header#/correlationId
 
   schemas:
-    detectionFraudePayload:
+    DetectionFraudePayload:
       type: object
       description: Audit Event API v1
-      required:
-        - eventType
-        - eventTime
-        - correlationId
-        - domain
-        - event
+      required: [eventType, eventTime, correlationId, domain, event, party]
       properties:
         eventType:
           type: string
-          enum:
-            - sim-swap
-            - identite
-            - usage
+          enum: [sim-swap, identite]
           description: Type de fraude.
         eventTime:
           type: string
           format: date-time
-        correlationId:
-          type: string
-          description: Identifiant métier corrélé (clé d'idempotence)
         domain:
-          type: string
-          example: portability
-        title:
           type: string
         description:
           type: string
@@ -94,15 +809,252 @@ components:
         timeOccurred:
           type: string
           format: date-time
+        partyRef:
+          type: string
+        MSISDN:
+          type: string
+    AbusUsagePayload:
+      type: object
+      description: Audit Event API v1
+      required: [usageType, eventTime, correlationId, subscriberRef, MSISDN]
+      properties:
+        usageType:
+          type: string
+          enum: [SMS, data, voice]
+          description: Type d'abus d'usage
+        eventTime:
+          type: string
+          format: date-time
+        subscriberRef:
+          type: string
+        MSISDN:
+          type: string
+        timeOccurred:
+          type: string
+          format: date-time
+    OfferingsVerifiedPayload:
+      type: object
+      required: [orderId, productOfferings]
+      properties:
+        productOfferings:
+          type: object
+          description: Offres validées avec leur détail
+          required: [name, code, offeringType]
+          properties:
+            name:
+              type: string
+            code:
+              type: string
+            description:
+              type: string
+            offeringType:
+              enum: [produit, service]
+        orderId:
+          type: integer
+          description: Référence à la commande
+    OfferingsInvalidPayload:
+      type: object
+      required: [orderId]
+      properties:
+        invalidproductofferings:
+          type: array
+          description: Codes des offres invalides
+        orderId:
+          type: integer
+          description: Référence à la commande
+    StockPayload:
+      type: object
+      required: [orderId]
+      properties:
+        affectedProductOfferings:
+          type: object
+          description: Structure d'offres avec les quantités restantes de stock
+          properties:
+            productOfferingRef:
+              type: string
+            quantity_after:
+              type: integer
+        orderId:
+          type: integer
+          description: Référence à la commande
+    OrderSagaSubmittedPayload:
+      type: object
+      required: [userId]
+      properties:
+        timeSubmitted:
+          type: string
+          format: date-time
+        order:
+          $ref: '#/components/schemas/OrderPayload'
+    OrderValidationsPayload:
+      type: object
+      required: [orderId]
+      properties:
+        orderId:
+          type: integer
+        validation:
+          type: string
+          enum: [OK, KO]
+    DoProvisionActionsPayload:
+      type: object
+      required: [orderId, MSISDN]
+      properties:
+        orderId:
+          type: integer
+        MSISDN:
+          type: string
+          description: Numéro mobile du service
+    DoInvoicingPayload:
+      type: object
+      required: [orderId, billCycleType]
+      properties:
+        orderId:
+          type: integer
+        billCycleType:
+          type: string
+          enum: [mensuel, ponctuel]
+          description: Type de cycle de facturation
+    OrderSagaEndedPayload:
+      type: object
+      required: [status, orderId]
+      properties:
+        status:
+          type: string
+        activation:
+          type: object
+          description: Détail de l'activation
+          properties:
+            lines:
+              type: object
+            status:
+              type: string
+        customerbillId:
+          type: integer
+        orderId:
+          type: integer
+        paymentLink:
+          type: string
+    BuyerValidationPayload:
+      type: object
+      required: [partyRef, orderId]
+      properties:
+        partyRef:
+          type: string
+        orderId:
+          type: integer
+        validation:
+          type: string
+          enum: [OK, KO]
+    PartyIdentifiedPayload:
+      type: object
+      required: [partyRef]
+      properties:
+        partyRef:
+          type: string
+        identificationTime:
+          type: string
+          format: date-time
+        validation:
+          type: string
+          enum: [OK, KO]
+    OrderStatePayload:
+      type: object
+      required: [order, orderState]
+      properties:
+        orderState:
+          type: string
+          enum: [draft, created, cancelled]
+        timeOccured:
+          type: string
+          format: date-time
+        order:
+          $ref: '#/components/schemas/OrderPayload'
+    OrderPayload:
+      type: object
+      required: [userId, items]
+      properties:
+        userId:
+          type: string
+        items:
+          type: object
+          description: Items de la commande
+    BillcycleCreatedPayload:
+      type: object
+      required: [billcycleId]
+      properties:
+        billcycleId:
+          type: integer
+    CustomerbillCreatedPayload:
+      type: object
+      required: [customerbillId]
+      properties:
+        customerbillId:
+          type: integer
+        totalAmount:
+          type: number
+    PaymentProcessedPayload:
+      type: object
+      required: [customerbillId]
+      properties:
+        customerbillId:
+          type: integer
+        paidAmount:
+          type: number
+        amountDue:
+          type: number
+    PaymentDelinquantPayload:
+      type: object
+      required: [customerbillId, userId]
+      properties:
+        userId:
+          type: integer
+        customerbillId:
+          type: integer
+        amountOverdue:
+          type: number
+    ServiceVerifiedPayload:
+      type: object
+      required: [serviceRef, orderId]
+      properties:
+        orderId:
+          type: integer
+        serviceRef:
+          type: string
+    ServiceProvisionPayload:
+      type: object
+      required: [orderId, service]
+      properties:
+        service:
+          $ref: '#/components/schemas/ServicePayload'
+        orderId:
+          type: integer
+        validation:
+          type: string
+          enum: [OK, KO]
+    ServicePayload:
+      type: object
+      required: [userId, orderId, MSISDN, serviceStatus]
+      properties:
+        userId:
+          type: integer
+        orderId:
+          type: integer
+        MSISDN:
+          type: string
+        supi:
+          type: string
+        serviceStatus:
+          type: string
+          enum: [created, active, ported, porting_in, porting_out, canceled, error]
 
   messageTraits:
     commonHeaders:
       headers:
         type: object
         properties:
-          messageId:
+          application-id:
             type: string
-            format: uuid
+            example: CanTelcoX
 
   operationTraits:
     antifraude:
@@ -111,5 +1063,106 @@ components:
           clientId:
             type: string
             enum:
-              - svc-client
+              - svc-clients
               - svc-orchestration
+    abususage:
+      bindings:
+        kafka:
+          clientId:
+            type: string
+            enum:
+              - svc-clients
+              - svc-lignes
+              - svc-facturation
+    saga:
+      bindings:
+        kafka:
+          clientId:
+            type: string
+            enum:
+              - svc-orchestration
+    auditcommande:
+      bindings:
+        kafka:
+          clientId:
+            type: string
+            enum:
+              - svc-audit
+              - svc-commandes
+    auditclient:
+      bindings:
+        kafka:
+          clientId:
+            type: string
+            enum:
+              - svc-audit
+              - svc-clients
+    auditligne:
+      bindings:
+        kafka:
+          clientId:
+            type: string
+            enum:
+              - svc-audit
+              - svc-lignes
+    auditfacturation:
+      bindings:
+        kafka:
+          clientId:
+            type: string
+            enum:
+              - svc-audit
+              - svc-facturation
+    audit:
+      bindings:
+        kafka:
+          clientId:
+            type: string
+            enum:
+              - svc-audit
+    clientcatalogueligne:
+      bindings:
+        kafka:
+          clientId:
+            type: string
+            enum:
+              - svc-client
+              - svc-catalogue
+              - svc-ligne
+    auditcataloguesaga:
+      bindings:
+        kafka:
+          clientId:
+            type: string
+            enum:
+              - svc-audit
+              - svc-catalogue
+              - svc-saga
+    auditcataloguesagaclient:
+      bindings:
+        kafka:
+          clientId:
+            type: string
+            enum:
+              - svc-audit
+              - svc-catalogue
+              - svc-saga
+              - svc-client
+    auditclientlignecommande:
+      bindings:
+        kafka:
+          clientId:
+            type: string
+            enum:
+              - svc-audit
+              - svc-client
+              - svc-ligne
+              - svc-commande
+    commande:
+      bindings:
+        kafka:
+          clientId:
+            type: string
+            enum:
+              - svc-commande
+
