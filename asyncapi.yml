@@ -1,0 +1,115 @@
+asyncapi: 3.1.0
+id: 'urn:ets:log430:e26:g2:e6:cantelcoxapi:1.0'
+info:
+  title: CanTelcoX - Événements Kafka (production)
+  version: 1.0.0
+  description: |
+    Contrat **AsyncAPI** de CanTelcoX — version événementielle (production).
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0'
+
+defaultContentType: application/json
+
+servers:
+  kafka:
+    host: 'kafka:9092'
+    protocol: kafka
+    description: Grappe Kafka de production
+    bindings:
+      kafka:
+        bindingVersion: '0.5.0'
+
+channels:
+  alerteFraude:
+    address: cantelcox.audit.1.0.event.alerte.fraude
+    description: Avis de détection d'une fraude
+    bindings:
+      kafka:
+        topic: audit.alerte-fraude
+        bindingVersion: '0.5.0'
+    messages:
+      detectionFraude:
+        $ref: '#/components/messages/detectionFraude'
+
+operations:
+  receptionAlerteFraude:
+    action: receive
+    channel:
+      $ref: '#/channels/alerteFraude'
+    summary: >-
+      Réagir quand une fraude est détectée.
+    traits:
+      - $ref: '#/components/operationTraits/antifraude'
+    messages:
+      - $ref: '#/channels/alerteFraude/messages/detectionFraude'
+
+components:
+  messages:
+    detectionFraude:
+      name: detectionFraude
+      title: detection-fraude
+      summary: >-
+        Informe sur l'occurence d'une fraude
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/detectionFraudePayload'
+
+  schemas:
+    detectionFraudePayload:
+      type: object
+      description: Audit Event API v1
+      required:
+        - eventType
+        - eventTime
+        - correlationId
+        - domain
+        - event
+      properties:
+        eventType:
+          type: string
+          enum:
+            - sim-swap
+            - identite
+            - usage
+          description: Type de fraude.
+        eventTime:
+          type: string
+          format: date-time
+        correlationId:
+          type: string
+          description: Identifiant métier corrélé (clé d'idempotence)
+        domain:
+          type: string
+          example: portability
+        title:
+          type: string
+        description:
+          type: string
+        priority:
+          type: string
+          example: "2"
+        timeOccurred:
+          type: string
+          format: date-time
+
+  messageTraits:
+    commonHeaders:
+      headers:
+        type: object
+        properties:
+          messageId:
+            type: string
+            format: uuid
+
+  operationTraits:
+    antifraude:
+      bindings:
+        kafka:
+          clientId:
+            type: string
+            enum:
+              - svc-client
+              - svc-orchestration
