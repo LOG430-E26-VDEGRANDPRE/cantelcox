@@ -575,6 +575,12 @@ operations:
       - $ref: '#/channels/serviceProvisionKo/messages/ServiceProvisionKo'
 
 components:
+
+  correlationIds:
+    default:
+      description: Identifiant métier de corrélation (clé d'idempotence)
+      location: $message.header#/correlationId
+
   messages:
     DetectionFraude:
       name: DetectionFraude
@@ -780,11 +786,6 @@ components:
         - $ref: '#/components/messageTraits/commonHeaders'
       payload:
         $ref: '#/components/schemas/ServiceProvisionPayload'
-
-  correlationIds:
-    default:
-      description: Identifiant métier de corrélation (clé d'idempotence)
-      location: $message.header#/correlationId
 
   schemas:
     DetectionFraudePayload:
