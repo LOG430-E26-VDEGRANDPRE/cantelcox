@@ -34,3 +34,15 @@ CREATE TABLE party (
 INSERT INTO party (firstName, lastName, uuid, email, username) VALUES
 ('Vincent', 'de Grandpré', '2dd68aef-1868-46a9-ac0b-2c1f21a2c53d', 'vincent.de-grandpre.1@ens.etsmtl.ca','operateur'),
 ('Abonné', 'CanTelcoX', '5e4e94c4-81c9-41f6-9935-782f6f88829c', 'test-cantelcox@de-grandpre.quebec','abonne');
+
+DROP TABLE IF EXISTS outbox;
+CREATE TABLE outbox (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    topic VARCHAR(100) NOT NULL,
+    aggregate_type VARCHAR(100) NOT NULL,
+    aggregate_id BIGINT NOT NULL,
+    event_type VARCHAR(100) NOT NULL,
+    payload JSON NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    published BOOLEAN DEFAULT FALSE
+);
