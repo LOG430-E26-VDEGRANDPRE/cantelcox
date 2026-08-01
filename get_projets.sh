@@ -7,7 +7,7 @@ git clone https://github.com/LOG430-E26-VDEGRANDPRE/svc-facturation.git
 git clone https://github.com/LOG430-E26-VDEGRANDPRE/svc-audit.git
 git clone https://github.com/LOG430-E26-VDEGRANDPRE/test-charge.git
 
-SERVICES=("svc-catalogue" "svc-clients" "svc-commandes" "svc-facturation" "svc-orchestration" "svc-lignes")
+SERVICES=("svc-catalogue" "svc-clients" "svc-commandes" "svc-facturation" "svc-orchestration" "svc-lignes" "svc-audit")
 
 for service in "${SERVICES[@]}"; do
     cd $service
