@@ -324,17 +324,32 @@ channels:
 
 operations:
 
-  getAlerteFraude:
+  popAlerteFraude:
     action: receive
     channel:
       $ref: '#/channels/alerteFraude'
     summary: >-
       Réagir quand une fraude est détectée.
+    bindings:
+        kafka:
+          clientId:
+            type: string
+            enum:
+              - svc-clients
+              - svc-orchestration
+    messages:
+      - $ref: '#/channels/alerteFraude/messages/DetectionFraude'
+  pushAlerteFraude:
+    action: send
+    channel:
+      $ref: '#/channels/alerteFraude'
+    summary: >-
+      Envoyer une alerte de fraude.
     traits:
       - $ref: '#/components/operationTraits/antifraude'
     messages:
       - $ref: '#/channels/alerteFraude/messages/DetectionFraude'
-  getAbusUsage:
+  popAbusUsage:
     action: receive
     channel:
       $ref: '#/channels/abusUsage'
@@ -344,7 +359,17 @@ operations:
       - $ref: '#/components/operationTraits/abususage'
     messages:
       - $ref: '#/channels/abusUsage/messages/AbusUsage'
-  getOfferingsVerified:
+  pushAbusUsage:
+    action: send
+    channel:
+      $ref: '#/channels/abusUsage'
+    summary: >-
+      Envoyer un avis d'abus d'usage.
+    traits:
+      - $ref: '#/components/operationTraits/abususage'
+    messages:
+      - $ref: '#/channels/abusUsage/messages/AbusUsage'
+  popOfferingsVerified:
     action: receive
     channel:
       $ref: '#/channels/offeringsVerified'
@@ -354,7 +379,17 @@ operations:
       - $ref: '#/components/operationTraits/saga'
     messages:
       - $ref: '#/channels/offeringsVerified/messages/OfferingsVerified'
-  getOfferingsInvalid:
+  pushOfferingsVerified:
+    action: send
+    channel:
+      $ref: '#/channels/offeringsVerified'
+    summary: >-
+      Envoyer une confirmation de vérification des offres.
+    traits:
+      - $ref: '#/components/operationTraits/saga'
+    messages:
+      - $ref: '#/channels/offeringsVerified/messages/OfferingsVerified'
+  popOfferingsInvalid:
     action: receive
     channel:
       $ref: '#/channels/offeringsInvalid'
@@ -364,7 +399,17 @@ operations:
       - $ref: '#/components/operationTraits/saga'
     messages:
       - $ref: '#/channels/offeringsInvalid/messages/OfferingsInvalid'
-  getStockDecreased:
+  pushOfferingsInvalid:
+    action: send
+    channel:
+      $ref: '#/channels/offeringsInvalid'
+    summary: >-
+      Envoyer une notification d'offres invalides.
+    traits:
+      - $ref: '#/components/operationTraits/saga'
+    messages:
+      - $ref: '#/channels/offeringsInvalid/messages/OfferingsInvalid'
+  popStockDecreased:
     action: receive
     channel:
       $ref: '#/channels/stockDecreased'
@@ -374,7 +419,17 @@ operations:
       - $ref: '#/components/operationTraits/saga'
     messages:
       - $ref: '#/channels/stockDecreased/messages/StockDecreased'
-  getStockIncreased:
+  pushStockDecreased:
+    action: send
+    channel:
+      $ref: '#/channels/stockDecreased'
+    summary: >-
+      Envoyer une notification de réduction de stock.
+    traits:
+      - $ref: '#/components/operationTraits/saga'
+    messages:
+      - $ref: '#/channels/stockDecreased/messages/StockDecreased'
+  popStockIncreased:
     action: receive
     channel:
       $ref: '#/channels/stockIncreased'
@@ -384,7 +439,17 @@ operations:
       - $ref: '#/components/operationTraits/saga'
     messages:
       - $ref: '#/channels/stockIncreased/messages/StockIncreased'
-  getOrderSagaSubmitted:
+  pushStockIncreased:
+    action: send
+    channel:
+      $ref: '#/channels/stockIncreased'
+    summary: >-
+      Envoyer une notification d'augmentation de stock.
+    traits:
+      - $ref: '#/components/operationTraits/saga'
+    messages:
+      - $ref: '#/channels/stockIncreased/messages/StockIncreased'
+  popOrderSagaSubmitted:
     action: receive
     channel:
       $ref: '#/channels/orderSagaSubmitted'
@@ -394,7 +459,17 @@ operations:
       - $ref: '#/components/operationTraits/auditcommande'
     messages:
       - $ref: '#/channels/orderSagaSubmitted/messages/OrderSagaSubmitted'
-  getOrderValidationsOk:
+  pushOrderSagaSubmitted:
+    action: send
+    channel:
+      $ref: '#/channels/orderSagaSubmitted'
+    summary: >-
+      Envoyer une notification de soumission de saga de commande.
+    traits:
+      - $ref: '#/components/operationTraits/auditcommande'
+    messages:
+      - $ref: '#/channels/orderSagaSubmitted/messages/OrderSagaSubmitted'
+  popOrderValidationsOk:
     action: receive
     channel:
       $ref: '#/channels/orderValidationsOk'
@@ -404,7 +479,17 @@ operations:
       - $ref: '#/components/operationTraits/commande'
     messages:
       - $ref: '#/channels/orderValidationsOk/messages/OrderValidationsOk'
-  getOrderValidationsKo:
+  pushOrderValidationsOk:
+    action: send
+    channel:
+      $ref: '#/channels/orderValidationsOk'
+    summary: >-
+      Envoyer une confirmation de validation réussie de commande.
+    traits:
+      - $ref: '#/components/operationTraits/commande'
+    messages:
+      - $ref: '#/channels/orderValidationsOk/messages/OrderValidationsOk'
+  popOrderValidationsKo:
     action: receive
     channel:
       $ref: '#/channels/orderValidationsKo'
@@ -414,7 +499,27 @@ operations:
       - $ref: '#/components/operationTraits/auditclient'
     messages:
       - $ref: '#/channels/orderValidationsKo/messages/OrderValidationsKo'
-  setDoProvisionActions:
+  pushOrderValidationsKo:
+    action: send
+    channel:
+      $ref: '#/channels/orderValidationsKo'
+    summary: >-
+      Envoyer une notification de validation échouée de commande.
+    traits:
+      - $ref: '#/components/operationTraits/auditclient'
+    messages:
+      - $ref: '#/channels/orderValidationsKo/messages/OrderValidationsKo'
+  popDoProvisionActions:
+    action: receive
+    channel:
+      $ref: '#/channels/doProvisionActions'
+    summary: >-
+      Réagir à une demande d'activation de services.
+    traits:
+      - $ref: '#/components/operationTraits/auditligne'
+    messages:
+      - $ref: '#/channels/doProvisionActions/messages/DoProvisionActions'
+  pushDoProvisionActions:
     action: send
     channel:
       $ref: '#/channels/doProvisionActions'
@@ -424,7 +529,17 @@ operations:
       - $ref: '#/components/operationTraits/auditligne'
     messages:
       - $ref: '#/channels/doProvisionActions/messages/DoProvisionActions'
-  setDoInvoicing:
+  popDoInvoicing:
+    action: receive
+    channel:
+      $ref: '#/channels/doInvoicing'
+    summary: >-
+      Réagir à une demande de génération de facturation.
+    traits:
+      - $ref: '#/components/operationTraits/auditfacturation'
+    messages:
+      - $ref: '#/channels/doInvoicing/messages/DoInvoicing'
+  pushDoInvoicing:
     action: send
     channel:
       $ref: '#/channels/doInvoicing'
@@ -434,7 +549,7 @@ operations:
       - $ref: '#/components/operationTraits/auditfacturation'
     messages:
       - $ref: '#/channels/doInvoicing/messages/DoInvoicing'
-  recevoirOrderSagaEnded:
+  popOrderSagaEnded:
     action: receive
     channel:
       $ref: '#/channels/orderSagaEnded'
@@ -444,7 +559,17 @@ operations:
       - $ref: '#/components/operationTraits/auditclient'
     messages:
       - $ref: '#/channels/orderSagaEnded/messages/OrderSagaEnded'
-  recevoirBuyerVerified:
+  pushOrderSagaEnded:
+    action: send
+    channel:
+      $ref: '#/channels/orderSagaEnded'
+    summary: >-
+      Envoyer une notification de fin de saga de commande.
+    traits:
+      - $ref: '#/components/operationTraits/auditclient'
+    messages:
+      - $ref: '#/channels/orderSagaEnded/messages/OrderSagaEnded'
+  popBuyerVerified:
     action: receive
     channel:
       $ref: '#/channels/buyerVerified'
@@ -454,7 +579,17 @@ operations:
       - $ref: '#/components/operationTraits/saga'
     messages:
       - $ref: '#/channels/buyerVerified/messages/BuyerVerified'
-  recevoirBuyerInvalid:
+  pushBuyerVerified:
+    action: send
+    channel:
+      $ref: '#/channels/buyerVerified'
+    summary: >-
+      Envoyer une confirmation de vérification du client.
+    traits:
+      - $ref: '#/components/operationTraits/saga'
+    messages:
+      - $ref: '#/channels/buyerVerified/messages/BuyerVerified'
+  popBuyerInvalid:
     action: receive
     channel:
       $ref: '#/channels/buyerInvalid'
@@ -464,7 +599,17 @@ operations:
       - $ref: '#/components/operationTraits/saga'
     messages:
       - $ref: '#/channels/buyerInvalid/messages/BuyerInvalid'
-  recevoirPartyIdentified:
+  pushBuyerInvalid:
+    action: send
+    channel:
+      $ref: '#/channels/buyerInvalid'
+    summary: >-
+      Envoyer une notification de vérification invalide du client.
+    traits:
+      - $ref: '#/components/operationTraits/saga'
+    messages:
+      - $ref: '#/channels/buyerInvalid/messages/BuyerInvalid'
+  popPartyIdentified:
     action: receive
     channel:
       $ref: '#/channels/partyIdentified'
@@ -474,7 +619,17 @@ operations:
       - $ref: '#/components/operationTraits/audit'
     messages:
       - $ref: '#/channels/partyIdentified/messages/PartyIdentified'
-  recevoirOrderDraft:
+  pushPartyIdentified:
+    action: send
+    channel:
+      $ref: '#/channels/partyIdentified'
+    summary: >-
+      Envoyer une notification d'identification d'abonné.
+    traits:
+      - $ref: '#/components/operationTraits/audit'
+    messages:
+      - $ref: '#/channels/partyIdentified/messages/PartyIdentified'
+  popOrderDraft:
     action: receive
     channel:
       $ref: '#/channels/orderDraft'
@@ -484,7 +639,17 @@ operations:
       - $ref: '#/components/operationTraits/clientcatalogueligne'
     messages:
       - $ref: '#/channels/orderDraft/messages/OrderDraft'
-  recevoirOrderCreated:
+  pushOrderDraft:
+    action: send
+    channel:
+      $ref: '#/channels/orderDraft'
+    summary: >-
+      Envoyer une notification de commande en état brouillon.
+    traits:
+      - $ref: '#/components/operationTraits/clientcatalogueligne'
+    messages:
+      - $ref: '#/channels/orderDraft/messages/OrderDraft'
+  popOrderCreated:
     action: receive
     channel:
       $ref: '#/channels/orderCreated'
@@ -494,7 +659,17 @@ operations:
       - $ref: '#/components/operationTraits/auditcataloguesaga'
     messages:
       - $ref: '#/channels/orderCreated/messages/OrderCreated'
-  recevoirOrderCancelled:
+  pushOrderCreated:
+    action: send
+    channel:
+      $ref: '#/channels/orderCreated'
+    summary: >-
+      Envoyer une notification de commande créée.
+    traits:
+      - $ref: '#/components/operationTraits/auditcataloguesaga'
+    messages:
+      - $ref: '#/channels/orderCreated/messages/OrderCreated'
+  popOrderCancelled:
     action: receive
     channel:
       $ref: '#/channels/orderCancelled'
@@ -504,7 +679,17 @@ operations:
       - $ref: '#/components/operationTraits/auditcataloguesagaclient'
     messages:
       - $ref: '#/channels/orderCancelled/messages/OrderCancelled'
-  recevoirBillcycleCreated:
+  pushOrderCancelled:
+    action: send
+    channel:
+      $ref: '#/channels/orderCancelled'
+    summary: >-
+      Envoyer une notification d'annulation de commande.
+    traits:
+      - $ref: '#/components/operationTraits/auditcataloguesagaclient'
+    messages:
+      - $ref: '#/channels/orderCancelled/messages/OrderCancelled'
+  popBillcycleCreated:
     action: receive
     channel:
       $ref: '#/channels/billcycleCreated'
@@ -514,7 +699,17 @@ operations:
       - $ref: '#/components/operationTraits/audit'
     messages:
       - $ref: '#/channels/billcycleCreated/messages/BillcycleCreated'
-  recevoirCustomerbillCreated:
+  pushBillcycleCreated:
+    action: send
+    channel:
+      $ref: '#/channels/billcycleCreated'
+    summary: >-
+      Envoyer une notification de création de cycle de facturation.
+    traits:
+      - $ref: '#/components/operationTraits/audit'
+    messages:
+      - $ref: '#/channels/billcycleCreated/messages/BillcycleCreated'
+  popCustomerbillCreated:
     action: receive
     channel:
       $ref: '#/channels/customerbillCreated'
@@ -524,17 +719,37 @@ operations:
       - $ref: '#/components/operationTraits/auditclient'
     messages:
       - $ref: '#/channels/customerbillCreated/messages/CustomerbillCreated'
-  recevoirPaymentProcessed:
+  pushCustomerbillCreated:
+    action: send
+    channel:
+      $ref: '#/channels/customerbillCreated'
+    summary: >-
+      Envoyer une notification de création de facture client.
+    traits:
+      - $ref: '#/components/operationTraits/auditclient'
+    messages:
+      - $ref: '#/channels/customerbillCreated/messages/CustomerbillCreated'
+  popPaymentProcessed:
     action: receive
     channel:
       $ref: '#/channels/paymentProcessed'
     summary: >-
-      Réagir quand une facture client est créée
+      Réagir quand un paiement est traité
     traits:
       - $ref: '#/components/operationTraits/auditclient'
     messages:
       - $ref: '#/channels/paymentProcessed/messages/PaymentProcessed'
-  recevoirPaymentDelinquant:
+  pushPaymentProcessed:
+    action: send
+    channel:
+      $ref: '#/channels/paymentProcessed'
+    summary: >-
+      Envoyer une notification de paiement traité.
+    traits:
+      - $ref: '#/components/operationTraits/auditclient'
+    messages:
+      - $ref: '#/channels/paymentProcessed/messages/PaymentProcessed'
+  popPaymentDelinquant:
     action: receive
     channel:
       $ref: '#/channels/paymentDelinquant'
@@ -544,7 +759,17 @@ operations:
       - $ref: '#/components/operationTraits/auditclientlignecommande'
     messages:
       - $ref: '#/channels/paymentDelinquant/messages/PaymentDelinquant'
-  recevoirServiceVerified:
+  pushPaymentDelinquant:
+    action: send
+    channel:
+      $ref: '#/channels/paymentDelinquant'
+    summary: >-
+      Envoyer une notification de paiement délinquant.
+    traits:
+      - $ref: '#/components/operationTraits/auditclientlignecommande'
+    messages:
+      - $ref: '#/channels/paymentDelinquant/messages/PaymentDelinquant'
+  popServiceVerified:
     action: receive
     channel:
       $ref: '#/channels/serviceVerified'
@@ -554,7 +779,17 @@ operations:
       - $ref: '#/components/operationTraits/saga'
     messages:
       - $ref: '#/channels/serviceVerified/messages/ServiceVerified'
-  recevoirServiceProvisionOk:
+  pushServiceVerified:
+    action: send
+    channel:
+      $ref: '#/channels/serviceVerified'
+    summary: >-
+      Envoyer une confirmation de vérification de service.
+    traits:
+      - $ref: '#/components/operationTraits/saga'
+    messages:
+      - $ref: '#/channels/serviceVerified/messages/ServiceVerified'
+  popServiceProvisionOk:
     action: receive
     channel:
       $ref: '#/channels/serviceProvisionOk'
@@ -564,12 +799,32 @@ operations:
       - $ref: '#/components/operationTraits/saga'
     messages:
       - $ref: '#/channels/serviceProvisionOk/messages/ServiceProvisionOk'
-  recevoirServiceProvisionKo:
+  pushServiceProvisionOk:
+    action: send
+    channel:
+      $ref: '#/channels/serviceProvisionOk'
+    summary: >-
+      Envoyer une confirmation d'activation réussie de service.
+    traits:
+      - $ref: '#/components/operationTraits/saga'
+    messages:
+      - $ref: '#/channels/serviceProvisionOk/messages/ServiceProvisionOk'
+  popServiceProvisionKo:
     action: receive
     channel:
       $ref: '#/channels/serviceProvisionKo'
     summary: >-
       Réagir quand l'activation d'un service a échouée
+    traits:
+      - $ref: '#/components/operationTraits/auditclient'
+    messages:
+      - $ref: '#/channels/serviceProvisionKo/messages/ServiceProvisionKo'
+  pushServiceProvisionKo:
+    action: send
+    channel:
+      $ref: '#/channels/serviceProvisionKo'
+    summary: >-
+      Envoyer une notification d'échec d'activation de service.
     traits:
       - $ref: '#/components/operationTraits/auditclient'
     messages:
@@ -801,8 +1056,6 @@ components:
         eventTime:
           type: string
           format: date-time
-        domain:
-          type: string
         description:
           type: string
         priority:
