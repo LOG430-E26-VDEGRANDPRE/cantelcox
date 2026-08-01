@@ -6,6 +6,7 @@ services:
     volumes:
       - ./db-init:/data
       - ./db-scripts:/scripts
+      - ./svc-audit/db-init:/db_audit
       - ./svc-clients/db-init:/db_clients
       - ./svc-commandes/db-init:/db_commandes
       - ./svc-facturation/db-init:/db_facturation
@@ -15,6 +16,7 @@ services:
       sh -c "cp /db_clients/init.sql /data/init-clients.sql;
             cp /db_commandes/init.sql /data/init-commandes.sql;
             cp /db_facturation/init.sql /data/init-facturation.sql;
+            cp /db_audit/init.sql /data/init-audit.sql;
             cp /db_facturation/test-data.sql /data/test-facturation.sql;
             cp /scripts_catalogue/* /scripts/;
             cp /scripts_facturation/* /scripts/;"
@@ -158,6 +160,7 @@ include:
   - svc-catalogue/docker-compose.yml
   - svc-facturation/docker-compose.yml
   - svc-lignes/docker-compose.yml
+  - svc-audit/docker-compose.yml
 
 networks:
   cantelcox-network:
