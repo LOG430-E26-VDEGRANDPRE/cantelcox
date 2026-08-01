@@ -345,8 +345,12 @@ operations:
       $ref: '#/channels/alerteFraude'
     summary: >-
       Envoyer une alerte de fraude.
-    traits:
-      - $ref: '#/components/operationTraits/antifraude'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-audit
     messages:
       - $ref: '#/channels/alerteFraude/messages/DetectionFraude'
   popAbusUsage:
@@ -355,8 +359,14 @@ operations:
       $ref: '#/channels/abusUsage'
     summary: >-
       Réagir quand un abus d'usage est détecté.
-    traits:
-      - $ref: '#/components/operationTraits/abususage'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-clients
+            - svc-lignes
+            - svc-facturation
     messages:
       - $ref: '#/channels/abusUsage/messages/AbusUsage'
   pushAbusUsage:
@@ -365,8 +375,12 @@ operations:
       $ref: '#/channels/abusUsage'
     summary: >-
       Envoyer un avis d'abus d'usage.
-    traits:
-      - $ref: '#/components/operationTraits/abususage'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-audit
     messages:
       - $ref: '#/channels/abusUsage/messages/AbusUsage'
   popOfferingsVerified:
@@ -375,8 +389,12 @@ operations:
       $ref: '#/channels/offeringsVerified'
     summary: >-
       Réagir quand les offres sont vérifiées.
-    traits:
-      - $ref: '#/components/operationTraits/saga'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-orchestration
     messages:
       - $ref: '#/channels/offeringsVerified/messages/OfferingsVerified'
   pushOfferingsVerified:
@@ -385,8 +403,12 @@ operations:
       $ref: '#/channels/offeringsVerified'
     summary: >-
       Envoyer une confirmation de vérification des offres.
-    traits:
-      - $ref: '#/components/operationTraits/saga'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-catalogue
     messages:
       - $ref: '#/channels/offeringsVerified/messages/OfferingsVerified'
   popOfferingsInvalid:
@@ -395,8 +417,12 @@ operations:
       $ref: '#/channels/offeringsInvalid'
     summary: >-
       Réagir quand les offres sont invalides.
-    traits:
-      - $ref: '#/components/operationTraits/saga'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-orchestration
     messages:
       - $ref: '#/channels/offeringsInvalid/messages/OfferingsInvalid'
   pushOfferingsInvalid:
@@ -405,8 +431,12 @@ operations:
       $ref: '#/channels/offeringsInvalid'
     summary: >-
       Envoyer une notification d'offres invalides.
-    traits:
-      - $ref: '#/components/operationTraits/saga'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-catalogue
     messages:
       - $ref: '#/channels/offeringsInvalid/messages/OfferingsInvalid'
   popStockDecreased:
@@ -415,8 +445,12 @@ operations:
       $ref: '#/channels/stockDecreased'
     summary: >-
       Réagir quand les stocks sont déduits.
-    traits:
-      - $ref: '#/components/operationTraits/saga'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-orchestration
     messages:
       - $ref: '#/channels/stockDecreased/messages/StockDecreased'
   pushStockDecreased:
@@ -425,8 +459,12 @@ operations:
       $ref: '#/channels/stockDecreased'
     summary: >-
       Envoyer une notification de réduction de stock.
-    traits:
-      - $ref: '#/components/operationTraits/saga'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-catalogue
     messages:
       - $ref: '#/channels/stockDecreased/messages/StockDecreased'
   popStockIncreased:
@@ -435,8 +473,12 @@ operations:
       $ref: '#/channels/stockIncreased'
     summary: >-
       Réagir quand les stocks sont augmentés suite à une compensation.
-    traits:
-      - $ref: '#/components/operationTraits/saga'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-orchestration
     messages:
       - $ref: '#/channels/stockIncreased/messages/StockIncreased'
   pushStockIncreased:
@@ -445,8 +487,12 @@ operations:
       $ref: '#/channels/stockIncreased'
     summary: >-
       Envoyer une notification d'augmentation de stock.
-    traits:
-      - $ref: '#/components/operationTraits/saga'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-catalogue
     messages:
       - $ref: '#/channels/stockIncreased/messages/StockIncreased'
   popOrderSagaSubmitted:
@@ -455,8 +501,13 @@ operations:
       $ref: '#/channels/orderSagaSubmitted'
     summary: >-
       Réagir quand la saga de commnade est soumise.
-    traits:
-      - $ref: '#/components/operationTraits/auditcommande'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-audit
+            - svc-commandes
     messages:
       - $ref: '#/channels/orderSagaSubmitted/messages/OrderSagaSubmitted'
   pushOrderSagaSubmitted:
@@ -465,8 +516,12 @@ operations:
       $ref: '#/channels/orderSagaSubmitted'
     summary: >-
       Envoyer une notification de soumission de saga de commande.
-    traits:
-      - $ref: '#/components/operationTraits/auditcommande'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-orchestration
     messages:
       - $ref: '#/channels/orderSagaSubmitted/messages/OrderSagaSubmitted'
   popOrderValidationsOk:
@@ -475,8 +530,12 @@ operations:
       $ref: '#/channels/orderValidationsOk'
     summary: >-
       Réagir quand la validation de la commande est bonne.
-    traits:
-      - $ref: '#/components/operationTraits/commande'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-commande
     messages:
       - $ref: '#/channels/orderValidationsOk/messages/OrderValidationsOk'
   pushOrderValidationsOk:
@@ -485,8 +544,12 @@ operations:
       $ref: '#/channels/orderValidationsOk'
     summary: >-
       Envoyer une confirmation de validation réussie de commande.
-    traits:
-      - $ref: '#/components/operationTraits/commande'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-orchestration
     messages:
       - $ref: '#/channels/orderValidationsOk/messages/OrderValidationsOk'
   popOrderValidationsKo:
@@ -495,8 +558,13 @@ operations:
       $ref: '#/channels/orderValidationsKo'
     summary: >-
       Réagir quand la validation de la commande est incorrecte.
-    traits:
-      - $ref: '#/components/operationTraits/auditclient'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-audit
+            - svc-clients
     messages:
       - $ref: '#/channels/orderValidationsKo/messages/OrderValidationsKo'
   pushOrderValidationsKo:
@@ -505,8 +573,12 @@ operations:
       $ref: '#/channels/orderValidationsKo'
     summary: >-
       Envoyer une notification de validation échouée de commande.
-    traits:
-      - $ref: '#/components/operationTraits/auditclient'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-orchestration
     messages:
       - $ref: '#/channels/orderValidationsKo/messages/OrderValidationsKo'
   popDoProvisionActions:
@@ -515,8 +587,13 @@ operations:
       $ref: '#/channels/doProvisionActions'
     summary: >-
       Réagir à une demande d'activation de services.
-    traits:
-      - $ref: '#/components/operationTraits/auditligne'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-audit
+            - svc-lignes
     messages:
       - $ref: '#/channels/doProvisionActions/messages/DoProvisionActions'
   pushDoProvisionActions:
@@ -525,8 +602,12 @@ operations:
       $ref: '#/channels/doProvisionActions'
     summary: >-
       Demander l'activation de services.
-    traits:
-      - $ref: '#/components/operationTraits/auditligne'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-orchestration
     messages:
       - $ref: '#/channels/doProvisionActions/messages/DoProvisionActions'
   popDoInvoicing:
@@ -535,8 +616,13 @@ operations:
       $ref: '#/channels/doInvoicing'
     summary: >-
       Réagir à une demande de génération de facturation.
-    traits:
-      - $ref: '#/components/operationTraits/auditfacturation'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-audit
+            - svc-facturation
     messages:
       - $ref: '#/channels/doInvoicing/messages/DoInvoicing'
   pushDoInvoicing:
@@ -545,8 +631,12 @@ operations:
       $ref: '#/channels/doInvoicing'
     summary: >-
       Demander la génération de la facturation en lot périodique.
-    traits:
-      - $ref: '#/components/operationTraits/auditfacturation'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-orchestration
     messages:
       - $ref: '#/channels/doInvoicing/messages/DoInvoicing'
   popOrderSagaEnded:
@@ -555,8 +645,13 @@ operations:
       $ref: '#/channels/orderSagaEnded'
     summary: >-
       Réagir quand la saga de commande est terminée
-    traits:
-      - $ref: '#/components/operationTraits/auditclient'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-audit
+            - svc-clients
     messages:
       - $ref: '#/channels/orderSagaEnded/messages/OrderSagaEnded'
   pushOrderSagaEnded:
@@ -565,8 +660,12 @@ operations:
       $ref: '#/channels/orderSagaEnded'
     summary: >-
       Envoyer une notification de fin de saga de commande.
-    traits:
-      - $ref: '#/components/operationTraits/auditclient'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-orchestration
     messages:
       - $ref: '#/channels/orderSagaEnded/messages/OrderSagaEnded'
   popBuyerVerified:
@@ -575,8 +674,12 @@ operations:
       $ref: '#/channels/buyerVerified'
     summary: >-
       Réagir quand le client est vérifié
-    traits:
-      - $ref: '#/components/operationTraits/saga'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-orchestration
     messages:
       - $ref: '#/channels/buyerVerified/messages/BuyerVerified'
   pushBuyerVerified:
@@ -585,8 +688,12 @@ operations:
       $ref: '#/channels/buyerVerified'
     summary: >-
       Envoyer une confirmation de vérification du client.
-    traits:
-      - $ref: '#/components/operationTraits/saga'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-clients
     messages:
       - $ref: '#/channels/buyerVerified/messages/BuyerVerified'
   popBuyerInvalid:
@@ -595,8 +702,12 @@ operations:
       $ref: '#/channels/buyerInvalid'
     summary: >-
       Réagir quand la vérification du client est invalide
-    traits:
-      - $ref: '#/components/operationTraits/saga'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-orchestration
     messages:
       - $ref: '#/channels/buyerInvalid/messages/BuyerInvalid'
   pushBuyerInvalid:
@@ -605,8 +716,12 @@ operations:
       $ref: '#/channels/buyerInvalid'
     summary: >-
       Envoyer une notification de vérification invalide du client.
-    traits:
-      - $ref: '#/components/operationTraits/saga'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-clients
     messages:
       - $ref: '#/channels/buyerInvalid/messages/BuyerInvalid'
   popPartyIdentified:
@@ -615,8 +730,12 @@ operations:
       $ref: '#/channels/partyIdentified'
     summary: >-
       Réagir quand un abonné est identifié
-    traits:
-      - $ref: '#/components/operationTraits/audit'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-audit
     messages:
       - $ref: '#/channels/partyIdentified/messages/PartyIdentified'
   pushPartyIdentified:
@@ -625,8 +744,12 @@ operations:
       $ref: '#/channels/partyIdentified'
     summary: >-
       Envoyer une notification d'identification d'abonné.
-    traits:
-      - $ref: '#/components/operationTraits/audit'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-clients
     messages:
       - $ref: '#/channels/partyIdentified/messages/PartyIdentified'
   popOrderDraft:
@@ -635,8 +758,14 @@ operations:
       $ref: '#/channels/orderDraft'
     summary: >-
       Réagir quand une commande est en état brouillon (procéder aux vérifications)
-    traits:
-      - $ref: '#/components/operationTraits/clientcatalogueligne'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-client
+            - svc-catalogue
+            - svc-ligne
     messages:
       - $ref: '#/channels/orderDraft/messages/OrderDraft'
   pushOrderDraft:
@@ -645,8 +774,12 @@ operations:
       $ref: '#/channels/orderDraft'
     summary: >-
       Envoyer une notification de commande en état brouillon.
-    traits:
-      - $ref: '#/components/operationTraits/clientcatalogueligne'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-commande
     messages:
       - $ref: '#/channels/orderDraft/messages/OrderDraft'
   popOrderCreated:
@@ -655,8 +788,14 @@ operations:
       $ref: '#/channels/orderCreated'
     summary: >-
       Réagir quand une commande est en état créée
-    traits:
-      - $ref: '#/components/operationTraits/auditcataloguesaga'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-audit
+            - svc-catalogue
+            - svc-saga
     messages:
       - $ref: '#/channels/orderCreated/messages/OrderCreated'
   pushOrderCreated:
@@ -665,8 +804,12 @@ operations:
       $ref: '#/channels/orderCreated'
     summary: >-
       Envoyer une notification de commande créée.
-    traits:
-      - $ref: '#/components/operationTraits/auditcataloguesaga'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-commande
     messages:
       - $ref: '#/channels/orderCreated/messages/OrderCreated'
   popOrderCancelled:
@@ -675,8 +818,15 @@ operations:
       $ref: '#/channels/orderCancelled'
     summary: >-
       Réagir quand une commande est annulée (compensation)
-    traits:
-      - $ref: '#/components/operationTraits/auditcataloguesagaclient'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-audit
+            - svc-catalogue
+            - svc-saga
+            - svc-client
     messages:
       - $ref: '#/channels/orderCancelled/messages/OrderCancelled'
   pushOrderCancelled:
@@ -685,8 +835,12 @@ operations:
       $ref: '#/channels/orderCancelled'
     summary: >-
       Envoyer une notification d'annulation de commande.
-    traits:
-      - $ref: '#/components/operationTraits/auditcataloguesagaclient'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-commande
     messages:
       - $ref: '#/channels/orderCancelled/messages/OrderCancelled'
   popBillcycleCreated:
@@ -695,8 +849,12 @@ operations:
       $ref: '#/channels/billcycleCreated'
     summary: >-
       Réagir quand un cycle de facturation est créé
-    traits:
-      - $ref: '#/components/operationTraits/audit'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-audit
     messages:
       - $ref: '#/channels/billcycleCreated/messages/BillcycleCreated'
   pushBillcycleCreated:
@@ -705,8 +863,12 @@ operations:
       $ref: '#/channels/billcycleCreated'
     summary: >-
       Envoyer une notification de création de cycle de facturation.
-    traits:
-      - $ref: '#/components/operationTraits/audit'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-facturation
     messages:
       - $ref: '#/channels/billcycleCreated/messages/BillcycleCreated'
   popCustomerbillCreated:
@@ -715,8 +877,13 @@ operations:
       $ref: '#/channels/customerbillCreated'
     summary: >-
       Réagir quand une facture client est créée
-    traits:
-      - $ref: '#/components/operationTraits/auditclient'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-audit
+            - svc-clients
     messages:
       - $ref: '#/channels/customerbillCreated/messages/CustomerbillCreated'
   pushCustomerbillCreated:
@@ -725,8 +892,12 @@ operations:
       $ref: '#/channels/customerbillCreated'
     summary: >-
       Envoyer une notification de création de facture client.
-    traits:
-      - $ref: '#/components/operationTraits/auditclient'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-facturation
     messages:
       - $ref: '#/channels/customerbillCreated/messages/CustomerbillCreated'
   popPaymentProcessed:
@@ -735,8 +906,13 @@ operations:
       $ref: '#/channels/paymentProcessed'
     summary: >-
       Réagir quand un paiement est traité
-    traits:
-      - $ref: '#/components/operationTraits/auditclient'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-audit
+            - svc-clients
     messages:
       - $ref: '#/channels/paymentProcessed/messages/PaymentProcessed'
   pushPaymentProcessed:
@@ -745,8 +921,12 @@ operations:
       $ref: '#/channels/paymentProcessed'
     summary: >-
       Envoyer une notification de paiement traité.
-    traits:
-      - $ref: '#/components/operationTraits/auditclient'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-facturation
     messages:
       - $ref: '#/channels/paymentProcessed/messages/PaymentProcessed'
   popPaymentDelinquant:
@@ -755,8 +935,15 @@ operations:
       $ref: '#/channels/paymentDelinquant'
     summary: >-
       Réagir quand un paiement devient délinquant
-    traits:
-      - $ref: '#/components/operationTraits/auditclientlignecommande'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-audit
+            - svc-client
+            - svc-ligne
+            - svc-commande
     messages:
       - $ref: '#/channels/paymentDelinquant/messages/PaymentDelinquant'
   pushPaymentDelinquant:
@@ -765,8 +952,12 @@ operations:
       $ref: '#/channels/paymentDelinquant'
     summary: >-
       Envoyer une notification de paiement délinquant.
-    traits:
-      - $ref: '#/components/operationTraits/auditclientlignecommande'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-facturation
     messages:
       - $ref: '#/channels/paymentDelinquant/messages/PaymentDelinquant'
   popServiceVerified:
@@ -775,8 +966,12 @@ operations:
       $ref: '#/channels/serviceVerified'
     summary: >-
       Réagir quand un service est vérifié
-    traits:
-      - $ref: '#/components/operationTraits/saga'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-orchestration
     messages:
       - $ref: '#/channels/serviceVerified/messages/ServiceVerified'
   pushServiceVerified:
@@ -785,8 +980,12 @@ operations:
       $ref: '#/channels/serviceVerified'
     summary: >-
       Envoyer une confirmation de vérification de service.
-    traits:
-      - $ref: '#/components/operationTraits/saga'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-lignes
     messages:
       - $ref: '#/channels/serviceVerified/messages/ServiceVerified'
   popServiceProvisionOk:
@@ -795,8 +994,12 @@ operations:
       $ref: '#/channels/serviceProvisionOk'
     summary: >-
       Réagir quand un service est activé avec succès
-    traits:
-      - $ref: '#/components/operationTraits/saga'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-orchestration
     messages:
       - $ref: '#/channels/serviceProvisionOk/messages/ServiceProvisionOk'
   pushServiceProvisionOk:
@@ -805,8 +1008,12 @@ operations:
       $ref: '#/channels/serviceProvisionOk'
     summary: >-
       Envoyer une confirmation d'activation réussie de service.
-    traits:
-      - $ref: '#/components/operationTraits/saga'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-lignes
     messages:
       - $ref: '#/channels/serviceProvisionOk/messages/ServiceProvisionOk'
   popServiceProvisionKo:
@@ -815,8 +1022,13 @@ operations:
       $ref: '#/channels/serviceProvisionKo'
     summary: >-
       Réagir quand l'activation d'un service a échouée
-    traits:
-      - $ref: '#/components/operationTraits/auditclient'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-audit
+            - svc-clients
     messages:
       - $ref: '#/channels/serviceProvisionKo/messages/ServiceProvisionKo'
   pushServiceProvisionKo:
@@ -825,8 +1037,12 @@ operations:
       $ref: '#/channels/serviceProvisionKo'
     summary: >-
       Envoyer une notification d'échec d'activation de service.
-    traits:
-      - $ref: '#/components/operationTraits/auditclient'
+    bindings:
+      kafka:
+        clientId:
+          type: string
+          enum:
+            - svc-lignes
     messages:
       - $ref: '#/channels/serviceProvisionKo/messages/ServiceProvisionKo'
 
