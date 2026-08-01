@@ -323,7 +323,8 @@ channels:
         $ref: '#/components/messages/ServiceProvisionKo'
 
 operations:
-  receptionAlerteFraude:
+
+  getAlerteFraude:
     action: receive
     channel:
       $ref: '#/channels/alerteFraude'
@@ -333,7 +334,7 @@ operations:
       - $ref: '#/components/operationTraits/antifraude'
     messages:
       - $ref: '#/channels/alerteFraude/messages/DetectionFraude'
-  receptionAbusUsage:
+  getAbusUsage:
     action: receive
     channel:
       $ref: '#/channels/abusUsage'
@@ -343,7 +344,7 @@ operations:
       - $ref: '#/components/operationTraits/abususage'
     messages:
       - $ref: '#/channels/abusUsage/messages/AbusUsage'
-  receptionOfferingsVerified:
+  getOfferingsVerified:
     action: receive
     channel:
       $ref: '#/channels/offeringsVerified'
@@ -353,7 +354,7 @@ operations:
       - $ref: '#/components/operationTraits/saga'
     messages:
       - $ref: '#/channels/offeringsVerified/messages/OfferingsVerified'
-  receptionOfferingsInvalid:
+  getOfferingsInvalid:
     action: receive
     channel:
       $ref: '#/channels/offeringsInvalid'
@@ -363,7 +364,7 @@ operations:
       - $ref: '#/components/operationTraits/saga'
     messages:
       - $ref: '#/channels/offeringsInvalid/messages/OfferingsInvalid'
-  receptionStockDecreased:
+  getStockDecreased:
     action: receive
     channel:
       $ref: '#/channels/stockDecreased'
@@ -373,7 +374,7 @@ operations:
       - $ref: '#/components/operationTraits/saga'
     messages:
       - $ref: '#/channels/stockDecreased/messages/StockDecreased'
-  receptionStockIncreased:
+  getStockIncreased:
     action: receive
     channel:
       $ref: '#/channels/stockIncreased'
@@ -383,7 +384,7 @@ operations:
       - $ref: '#/components/operationTraits/saga'
     messages:
       - $ref: '#/channels/stockIncreased/messages/StockIncreased'
-  receptionOrderSagaSubmitted:
+  getOrderSagaSubmitted:
     action: receive
     channel:
       $ref: '#/channels/orderSagaSubmitted'
@@ -393,7 +394,7 @@ operations:
       - $ref: '#/components/operationTraits/auditcommande'
     messages:
       - $ref: '#/channels/orderSagaSubmitted/messages/OrderSagaSubmitted'
-  receptionOrderValidationsOk:
+  getOrderValidationsOk:
     action: receive
     channel:
       $ref: '#/channels/orderValidationsOk'
@@ -403,7 +404,7 @@ operations:
       - $ref: '#/components/operationTraits/commande'
     messages:
       - $ref: '#/channels/orderValidationsOk/messages/OrderValidationsOk'
-  receptionOrderValidationsKo:
+  getOrderValidationsKo:
     action: receive
     channel:
       $ref: '#/channels/orderValidationsKo'
@@ -413,7 +414,7 @@ operations:
       - $ref: '#/components/operationTraits/auditclient'
     messages:
       - $ref: '#/channels/orderValidationsKo/messages/OrderValidationsKo'
-  publierDoProvisionActions:
+  setDoProvisionActions:
     action: send
     channel:
       $ref: '#/channels/doProvisionActions'
@@ -423,7 +424,7 @@ operations:
       - $ref: '#/components/operationTraits/auditligne'
     messages:
       - $ref: '#/channels/doProvisionActions/messages/DoProvisionActions'
-  publierDoInvoicing:
+  setDoInvoicing:
     action: send
     channel:
       $ref: '#/channels/doInvoicing'
@@ -1052,10 +1053,12 @@ components:
     commonHeaders:
       headers:
         type: object
+        required: [aggregate_type, aggregate_id]
         properties:
-          application-id:
+          aggregate_id:
             type: string
-            example: CanTelcoX
+          aggregate_type:
+            type: string
 
   operationTraits:
     antifraude:
