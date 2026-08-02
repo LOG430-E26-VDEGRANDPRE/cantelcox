@@ -535,7 +535,7 @@ operations:
         clientId:
           type: string
           enum:
-            - svc-commande
+            - svc-commandes
     messages:
       - $ref: '#/channels/orderValidationsOk/messages/OrderValidationsOk'
   pushOrderValidationsOk:
@@ -779,7 +779,7 @@ operations:
         clientId:
           type: string
           enum:
-            - svc-commande
+            - svc-commandes
     messages:
       - $ref: '#/channels/orderDraft/messages/OrderDraft'
   popOrderCreated:
@@ -809,7 +809,7 @@ operations:
         clientId:
           type: string
           enum:
-            - svc-commande
+            - svc-commandes
     messages:
       - $ref: '#/channels/orderCreated/messages/OrderCreated'
   popOrderCancelled:
@@ -840,7 +840,7 @@ operations:
         clientId:
           type: string
           enum:
-            - svc-commande
+            - svc-commandes
     messages:
       - $ref: '#/channels/orderCancelled/messages/OrderCancelled'
   popBillcycleCreated:
@@ -943,7 +943,7 @@ operations:
             - svc-audit
             - svc-client
             - svc-ligne
-            - svc-commande
+            - svc-commandes
     messages:
       - $ref: '#/channels/paymentDelinquant/messages/PaymentDelinquant'
   pushPaymentDelinquant:
@@ -1630,12 +1630,12 @@ components:
               - svc-audit
               - svc-client
               - svc-ligne
-              - svc-commande
+              - svc-commandes
     commande:
       bindings:
         kafka:
           clientId:
             type: string
             enum:
-              - svc-commande
+              - svc-commandes
 

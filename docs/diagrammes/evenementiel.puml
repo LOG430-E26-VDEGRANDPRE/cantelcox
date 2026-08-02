@@ -1,0 +1,177 @@
+@startuml CanTelcoX_Kafka_Flux
+' ===== STYLE =====
+skinparam monochrome false
+skinparam shadowing true
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+
+' Couleurs style "bande dessinée"
+skinparam class {
+    BackgroundColor #fff9c4
+    BorderColor #ffd54f
+    FontColor #5d4037
+}
+
+' Services (orange)
+class "🏢 svc-audit" as svc_audit #ffd54f
+class "📦 svc-catalogue" as svc_catalogue #ffd54f
+class "👥 svc-clients" as svc_clients #ffd54f
+class "📝 svc-commande" as svc_commande #ffd54f
+class "📝 svc-commandes" as svc_commandes #ffd54f
+class "💰 svc-facturation" as svc_facturation #ffd54f
+class "📡 svc-lignes" as svc_lignes #ffd54f
+class "🎭 svc-orchestration" as svc_orchestration #ffd54f
+class "🔄 svc-saga" as svc_saga #ffd54f
+class "👤 svc-client" as svc_client #ffd54f
+class "📶 svc-ligne" as svc_ligne #ffd54f
+
+' Topics (vert)
+class "🚨 audit.alerte-fraude" as topic_alerte_fraude #4caf50
+class "⚠️ audit.abus-usage" as topic_abus_usage #4caf50
+class "✅ catalogue.offerings-verified" as topic_offerings_verified #4caf50
+class "❌ catalogue.offerings-invalid" as topic_offerings_invalid #4caf50
+class "⬇️ catalogue.stock-decreased" as topic_stock_decreased #4caf50
+class "⬆️ catalogue.stock-increased" as topic_stock_increased #4caf50
+class "📤 saga.order-submitted" as topic_order_submitted #4caf50
+class "✅ saga.order-validations-ok" as topic_order_validations_ok #4caf50
+class "❌ saga.order-validations-ko" as topic_order_validations_ko #4caf50
+class "🔧 saga.order-do-provision" as topic_order_do_provision #4caf50
+class "💳 saga.order-do-invoicing" as topic_order_do_invoicing #4caf50
+class "🏁 saga.order-ended" as topic_order_ended #4caf50
+class "✅ client.buyer-verified" as topic_buyer_verified #4caf50
+class "❌ client.buyer-invalid" as topic_buyer_invalid #4caf50
+class "🆔 client.party-identified" as topic_party_identified #4caf50
+class "📝 commande.order-draft" as topic_order_draft #4caf50
+class "✨ commande.order-created" as topic_order_created #4caf50
+class "❌ commande.order-cancelled" as topic_order_cancelled #4caf50
+class "📅 facturation.billcycle-created" as topic_billcycle_created #4caf50
+class "🧾 facturation.customerbill-created" as topic_customerbill_created #4caf50
+class "💵 facturation.payment-processed" as topic_payment_processed #4caf50
+class "⚠️ facturation.payment-delinquant" as topic_payment_delinquant #4caf50
+class "✅ lignes.service-verified" as topic_service_verified #4caf50
+class "✅ lignes.service-provision-ok" as topic_service_provision_ok #4caf50
+class "❌ lignes.service-provision-ko" as topic_service_provision_ko #4caf50
+
+' ===== LINKS =====
+' Alerte Fraude
+svc_audit --> topic_alerte_fraude : pushAlerteFraude (send)
+topic_alerte_fraude --> svc_clients : popAlerteFraude (receive)
+topic_alerte_fraude --> svc_orchestration : popAlerteFraude (receive)
+
+' Abus Usage
+svc_audit --> topic_abus_usage : pushAbusUsage (send)
+topic_abus_usage --> svc_clients : popAbusUsage (receive)
+topic_abus_usage --> svc_lignes : popAbusUsage (receive)
+topic_abus_usage --> svc_facturation : popAbusUsage (receive)
+
+' Offerings Verified
+svc_catalogue --> topic_offerings_verified : pushOfferingsVerified (send)
+topic_offerings_verified --> svc_orchestration : popOfferingsVerified (receive)
+
+' Offerings Invalid
+svc_catalogue --> topic_offerings_invalid : pushOfferingsInvalid (send)
+topic_offerings_invalid --> svc_orchestration : popOfferingsInvalid (receive)
+
+' Stock Decreased
+svc_catalogue --> topic_stock_decreased : pushStockDecreased (send)
+topic_stock_decreased --> svc_orchestration : popStockDecreased (receive)
+
+' Stock Increased
+svc_catalogue --> topic_stock_increased : pushStockIncreased (send)
+topic_stock_increased --> svc_orchestration : popStockIncreased (receive)
+
+' Saga Order Submitted
+svc_orchestration --> topic_order_submitted : pushOrderSagaSubmitted (send)
+topic_order_submitted --> svc_audit : popOrderSagaSubmitted (receive)
+topic_order_submitted --> svc_commandes : popOrderSagaSubmitted (receive)
+
+' Saga Order Validations OK
+svc_orchestration --> topic_order_validations_ok : pushOrderValidationsOk (send)
+topic_order_validations_ok --> svc_commande : popOrderValidationsOk (receive)
+
+' Saga Order Validations KO
+svc_orchestration --> topic_order_validations_ko : pushOrderValidationsKo (send)
+topic_order_validations_ko --> svc_audit : popOrderValidationsKo (receive)
+topic_order_validations_ko --> svc_clients : popOrderValidationsKo (receive)
+
+' Saga Do Provision
+svc_orchestration --> topic_order_do_provision : pushDoProvisionActions (send)
+topic_order_do_provision --> svc_audit : popDoProvisionActions (receive)
+topic_order_do_provision --> svc_lignes : popDoProvisionActions (receive)
+
+' Saga Do Invoicing
+svc_orchestration --> topic_order_do_invoicing : pushDoInvoicing (send)
+topic_order_do_invoicing --> svc_audit : popDoInvoicing (receive)
+topic_order_do_invoicing --> svc_facturation : popDoInvoicing (receive)
+
+' Saga Order Ended
+svc_orchestration --> topic_order_ended : pushOrderSagaEnded (send)
+topic_order_ended --> svc_audit : popOrderSagaEnded (receive)
+topic_order_ended --> svc_clients : popOrderSagaEnded (receive)
+
+' Client Buyer Verified
+svc_clients --> topic_buyer_verified : pushBuyerVerified (send)
+topic_buyer_verified --> svc_orchestration : popBuyerVerified (receive)
+
+' Client Buyer Invalid
+svc_clients --> topic_buyer_invalid : pushBuyerInvalid (send)
+topic_buyer_invalid --> svc_orchestration : popBuyerInvalid (receive)
+
+' Client Party Identified
+svc_clients --> topic_party_identified : pushPartyIdentified (send)
+topic_party_identified --> svc_audit : popPartyIdentified (receive)
+
+' Commande Order Draft
+svc_commande --> topic_order_draft : pushOrderDraft (send)
+topic_order_draft --> svc_client : popOrderDraft (receive)
+topic_order_draft --> svc_catalogue : popOrderDraft (receive)
+topic_order_draft --> svc_ligne : popOrderDraft (receive)
+
+' Commande Order Created
+svc_commande --> topic_order_created : pushOrderCreated (send)
+topic_order_created --> svc_audit : popOrderCreated (receive)
+topic_order_created --> svc_catalogue : popOrderCreated (receive)
+topic_order_created --> svc_saga : popOrderCreated (receive)
+
+' Commande Order Cancelled
+svc_commande --> topic_order_cancelled : pushOrderCancelled (send)
+topic_order_cancelled --> svc_audit : popOrderCancelled (receive)
+topic_order_cancelled --> svc_catalogue : popOrderCancelled (receive)
+topic_order_cancelled --> svc_saga : popOrderCancelled (receive)
+topic_order_cancelled --> svc_client : popOrderCancelled (receive)
+
+' Facturation Billcycle Created
+svc_facturation --> topic_billcycle_created : pushBillcycleCreated (send)
+topic_billcycle_created --> svc_audit : popBillcycleCreated (receive)
+
+' Facturation Customerbill Created
+svc_facturation --> topic_customerbill_created : pushCustomerbillCreated (send)
+topic_customerbill_created --> svc_audit : popCustomerbillCreated (receive)
+topic_customerbill_created --> svc_clients : popCustomerbillCreated (receive)
+
+' Facturation Payment Processed
+svc_facturation --> topic_payment_processed : pushPaymentProcessed (send)
+topic_payment_processed --> svc_audit : popPaymentProcessed (receive)
+topic_payment_processed --> svc_clients : popPaymentProcessed (receive)
+
+' Facturation Payment Delinquant
+svc_facturation --> topic_payment_delinquant : pushPaymentDelinquant (send)
+topic_payment_delinquant --> svc_audit : popPaymentDelinquant (receive)
+topic_payment_delinquant --> svc_client : popPaymentDelinquant (receive)
+topic_payment_delinquant --> svc_ligne : popPaymentDelinquant (receive)
+topic_payment_delinquant --> svc_commande : popPaymentDelinquant (receive)
+
+' Lignes Service Verified
+svc_lignes --> topic_service_verified : pushServiceVerified (send)
+topic_service_verified --> svc_orchestration : popServiceVerified (receive)
+
+' Lignes Service Provision OK
+svc_lignes --> topic_service_provision_ok : pushServiceProvisionOk (send)
+topic_service_provision_ok --> svc_orchestration : popServiceProvisionOk (receive)
+
+' Lignes Service Provision KO
+svc_lignes --> topic_service_provision_ko : pushServiceProvisionKo (send)
+topic_service_provision_ko --> svc_audit : popServiceProvisionKo (receive)
+topic_service_provision_ko --> svc_clients : popServiceProvisionKo (receive)
+
+@enduml
