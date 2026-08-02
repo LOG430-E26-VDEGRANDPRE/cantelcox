@@ -763,7 +763,7 @@ operations:
         clientId:
           type: string
           enum:
-            - svc-client
+            - svc-clients
             - svc-catalogue
             - svc-ligne
     messages:
@@ -795,7 +795,7 @@ operations:
           enum:
             - svc-audit
             - svc-catalogue
-            - svc-saga
+            - svc-orchestration
     messages:
       - $ref: '#/channels/orderCreated/messages/OrderCreated'
   pushOrderCreated:
@@ -825,8 +825,8 @@ operations:
           enum:
             - svc-audit
             - svc-catalogue
-            - svc-saga
-            - svc-client
+            - svc-orchestration
+            - svc-clients
     messages:
       - $ref: '#/channels/orderCancelled/messages/OrderCancelled'
   pushOrderCancelled:
@@ -941,7 +941,7 @@ operations:
           type: string
           enum:
             - svc-audit
-            - svc-client
+            - svc-clients
             - svc-ligne
             - svc-commandes
     messages:
@@ -1599,7 +1599,7 @@ components:
           clientId:
             type: string
             enum:
-              - svc-client
+              - svc-clients
               - svc-catalogue
               - svc-ligne
     auditcataloguesaga:
@@ -1610,7 +1610,7 @@ components:
             enum:
               - svc-audit
               - svc-catalogue
-              - svc-saga
+              - svc-orchestration
     auditcataloguesagaclient:
       bindings:
         kafka:
@@ -1619,8 +1619,8 @@ components:
             enum:
               - svc-audit
               - svc-catalogue
-              - svc-saga
-              - svc-client
+              - svc-orchestration
+              - svc-clients
     auditclientlignecommande:
       bindings:
         kafka:
@@ -1628,7 +1628,7 @@ components:
             type: string
             enum:
               - svc-audit
-              - svc-client
+              - svc-clients
               - svc-ligne
               - svc-commandes
     commande:
