@@ -69,4 +69,17 @@ CREATE TABLE idempotency_keys (
     UNIQUE(idempotency_key)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Outbox table for event-driven architecture
+DROP TABLE IF EXISTS outbox;
+CREATE TABLE outbox (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    topic VARCHAR(100) NOT NULL,
+    aggregate_type VARCHAR(100) NOT NULL,
+    aggregate_id BIGINT NOT NULL,
+    event_type VARCHAR(100) NOT NULL,
+    payload JSON NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    published BOOLEAN DEFAULT FALSE
+);
+
 INSERT INTO billcycles (name, description) VALUES ('202607', 'Cycle de facturation initial');
