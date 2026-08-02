@@ -64,6 +64,19 @@ CREATE TABLE idempotency_keys (
     UNIQUE(idempotency_key)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Outbox table for event-driven architecture
+DROP TABLE IF EXISTS outbox;
+CREATE TABLE outbox (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    topic VARCHAR(100) NOT NULL,
+    aggregate_type VARCHAR(100) NOT NULL,
+    aggregate_id BIGINT NOT NULL,
+    event_type VARCHAR(100) NOT NULL,
+    payload JSON NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    published BOOLEAN DEFAULT FALSE
+);
+
 INSERT INTO products (name, productOfferingRef, serviceRef, price, type) VALUES
 ('Samsung A54', 'SMGA54', NULL, 299.99, 'produit'),
 ('Apple iPhone 8 - Promo', 'IPH008', NULL, 499.99, 'produit'),
