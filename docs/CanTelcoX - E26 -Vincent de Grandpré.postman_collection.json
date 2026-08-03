@@ -145,7 +145,7 @@
 								"{{clients_url}}"
 							],
 							"path": [
-								"health"
+								"health-check"
 							]
 						}
 					},
@@ -834,7 +834,7 @@
 					"response": []
 				},
 				{
-					"name": "Mesures",
+					"name": "Métriques",
 					"request": {
 						"method": "GET",
 						"header": [],
