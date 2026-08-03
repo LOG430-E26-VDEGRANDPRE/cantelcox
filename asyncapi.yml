@@ -316,7 +316,7 @@ channels:
       - name: compensation
     bindings:
       kafka:
-        topic: lignes.service-provisi
+        topic: lignes.service-provision-ko
         bindingVersion: '0.5.0'
     messages:
       ServiceProvisionKo:
@@ -1029,6 +1029,7 @@ operations:
           enum:
             - svc-audit
             - svc-clients
+            - svc-orchestration
     messages:
       - $ref: '#/channels/serviceProvisionKo/messages/ServiceProvisionKo'
   pushServiceProvisionKo:
@@ -1368,10 +1369,19 @@ components:
           enum: [OK, KO]
     DoProvisionActionsPayload:
       type: object
-      required: [orderId, MSISDN]
+      required: [provisioningId, orderId, userId, productOfferingRef, MSISDN]
       properties:
+        provisioningId:
+          type: string
+          format: uuid
+          description: Identifiant unique de cette tentative de provisionnement
         orderId:
           type: integer
+        userId:
+          type: integer
+        productOfferingRef:
+          type: string
+          description: Référence de l'offre associée à la ligne
         MSISDN:
           type: string
           description: Numéro mobile du service
@@ -1493,8 +1503,15 @@ components:
           type: string
     ServiceProvisionPayload:
       type: object
-      required: [orderId, service]
+      required: [provisioningId, productOfferingRef, orderId, validation, service]
       properties:
+        provisioningId:
+          type: string
+          format: uuid
+          description: Identifiant repris de DoProvisionActions
+        productOfferingRef:
+          type: string
+          description: Référence de l'offre associée à la ligne
         service:
           $ref: '#/components/schemas/ServicePayload'
         orderId:
@@ -1502,6 +1519,9 @@ components:
         validation:
           type: string
           enum: [OK, KO]
+        failureReason:
+          type: string
+          description: Raison métier ou technique d'un résultat KO
     ServicePayload:
       type: object
       required: [userId, orderId, MSISDN, serviceStatus]
