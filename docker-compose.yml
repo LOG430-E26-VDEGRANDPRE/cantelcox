@@ -92,11 +92,26 @@ services:
       start_period: 10s
 
   krakend:
-    image: devopsfaith/krakend:2.7
-    restart: unless-stopped
     container_name: api-gateway
+    image: nginx:latest
     ports:
       - "8080:8080"
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api-gateway1
+      - api-gateway2
+      # - api-gateway3
+      # - api-gateway4
+    networks:
+      - cantelcox-network
+
+  api-gateway1:
+    image: devopsfaith/krakend:2.7
+    restart: unless-stopped
+    container_name: api-gateway1
+    ports:
+      - "8180:8080"
     volumes:
       - ./config/krakend.json:/etc/krakend/krakend.json
     networks:
@@ -107,6 +122,57 @@ services:
       - svc_commandes
       - jaeger
       - keycloak
+
+  api-gateway2:
+    image: devopsfaith/krakend:2.7
+    restart: unless-stopped
+    container_name: api-gateway2
+    ports:
+      - "8280:8080"
+    volumes:
+      - ./config/krakend.json:/etc/krakend/krakend.json
+    networks:
+      - cantelcox-network
+    depends_on:
+      - svc_clients
+      - svc_orchestration
+      - svc_commandes
+      - jaeger
+      - keycloak
+
+  # api-gateway3:
+  #   image: devopsfaith/krakend:2.7
+  #   restart: unless-stopped
+  #   container_name: api-gateway3
+  #   ports:
+  #     - "8380:8080"
+  #   volumes:
+  #     - ./config/krakend.json:/etc/krakend/krakend.json
+  #   networks:
+  #     - cantelcox-network
+  #   depends_on:
+  #     - svc_clients
+  #     - svc_orchestration
+  #     - svc_commandes
+  #     - jaeger
+  #     - keycloak
+
+  # api-gateway4:
+  #   image: devopsfaith/krakend:2.7
+  #   restart: unless-stopped
+  #   container_name: api-gateway4
+  #   ports:
+  #     - "8480:8080"
+  #   volumes:
+  #     - ./config/krakend.json:/etc/krakend/krakend.json
+  #   networks:
+  #     - cantelcox-network
+  #   depends_on:
+  #     - svc_clients
+  #     - svc_orchestration
+  #     - svc_commandes
+  #     - jaeger
+  #     - keycloak
 
   prometheus:
     image: prom/prometheus:latest
