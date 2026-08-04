@@ -1,0 +1,105 @@
+@startuml
+title
+Séquence bout-en-bout - Phase II
+Inscription -> JWT -> Abonnement -> Activation -> Consultation d'usage
+endtitle
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+
+actor Abonné as Abonné
+
+participant "API\nGateway" as API #IMPLEMENTATION
+participant "Service\nOrchestration" as Orchestration #Gold
+participant "Bus\nKafka" as Kafka #CYAN
+participant "Service\nClients" as Profil #Wheat
+participant "Service\nCommandes" as Commande #TECHNOLOGY
+participant "Service\nCatalogue" as Catalogue #BUSINESS
+participant "Service\nLignes" as Lignes #Lavender
+participant "Service\nFacturation" as Facturation #IMPLEMENTATION
+participant "Service\nAudit" as Audit #Thistle
+participant "HLR /\nHSS" as HLR
+participant "Hub de\nportabilité" as Hub
+
+group Identification et authentification
+Abonné -> API : POST /clients/v1/party
+API -> Profil : POST /v1/party
+Profil --> API : [200] {userId}
+API --> Abonné : [200] {userId}
+Abonné -> API : POST /clients/v1/auth
+API -> Profil : PATCH /v1/auth
+Profil --> API : [200] {jwt}
+API --> Abonné : [200] {jwt}
+end group
+
+group 0. Réception d'une commande
+Abonné -> API : POST /orchestration/v1/commande
+API -> Orchestration : POST /v2/saga/order
+Orchestration --> Kafka : pushOrderSagaSubmitted
+Orchestration --> API : [202] Accepted
+API --> Abonné : [202] Accepted
+Commande --> Kafka : popOrderSagaSubmitted
+Audit --> Kafka : popOrderSagaSubmitted
+Commande --> Kafka : pushOrderDraft
+end group
+
+group 1. Validations de la commande
+Profil --> Kafka : popOrderDraft
+Lignes --> Kafka : popOrderDraft
+Lignes -> HLR : GET /disponibilite
+Catalogue --> Kafka : popOrderDraft
+Profil --> Kafka : pushBuyerVerified
+Orchestration --> Kafka : popBuyerVerified
+Lignes --> Kafka : pushServiceVerified
+Orchestration --> Kafka : popServiceVerified
+Catalogue --> Kafka : pushOfferingsVerified
+Orchestration --> Kafka : popOfferingsVerified
+end group
+group 2. Approuver la commande
+Orchestration --> Kafka : pushOrderValidationsOk
+end group
+group 3. Création de la commande
+Commande --> Kafka : popOrderValidationsOk
+Commande --> Kafka : pushOrderCreated
+Orchestration --> Kafka : popOrderCreated
+Audit --> Kafka : popOrderCreated
+Catalogue --> Kafka : popOrderCreated
+Catalogue --> Kafka : pushStockDecreased
+Orchestration --> Kafka : popStockDecrased
+Orchestration --> Kafka : pushDoProvisionActions
+end group
+group 4. Portabilité / Activation de la ligne
+Audit --> Kafka : popDoProvisionActions
+Lignes --> Kafka : popDoProvisionActions
+Lignes -> Hub : POST /port-in
+Hub --> Lignes : [202] - Accepted
+group tant que portabilité non terminée\nchaque 10 secondes jusqu'à 300 secondes
+Lignes -> Hub : GET /status/port-in
+end group
+Lignes -> HLR : POST /activation
+Lignes --> Kafka : pushServiceProvisionOk
+Orchestration --> Kafka : popServiceProvisionOk
+end group
+group 5. Facturation
+Orchestration --> Kafka : pushDoInvoicing
+Facturation --> Kafka : popDoInvoicing
+Facturation --> Kafka : pushBillcycleCreated
+Facturation --> Kafka : pushCustomerbillCreated
+Audit --> Kafka : popBillcycleCreated
+Audit --> Kafka : popCustomerbillCreated
+Profil --> Kafka : popCustomerbillCreated
+Profil --> Abonné : Notification par courriel
+end group
+group 6. Paiement
+Abonné -> API : POST /orchestration/v1/paiement
+API -> Facturation : POST /v1/payments/process
+Facturation --> Kafka : pushPaymentProcessed
+Orchestration --> Kafka : popPaymentProcesses
+Commande --> Kafka : popPaymentProcesses
+Profil --> Kafka : popPaymentProcesses
+Orchestration --> Kafka : pushSagaEnded
+end group
+group 7. Fin de la saga
+Audit --> Kafka : popSagaEnded
+Profil --> Kafka : popSagaEnded
+Profil --> Abonné : Notification de commande complétée
+end group
+@enduml

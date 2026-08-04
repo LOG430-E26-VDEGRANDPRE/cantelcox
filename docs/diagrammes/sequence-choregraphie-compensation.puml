@@ -1,0 +1,61 @@
+@startuml
+title
+Séquence de compensation - Paiement refusé
+Inscription -> JWT -> Paiement refusé -> Compensation -> Fin de la saga
+endtitle
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+
+actor Abonné as Abonné
+
+participant "API\nGateway" as API #IMPLEMENTATION
+participant "Service\nOrchestration" as Orchestration #Gold
+participant "Bus\nKafka" as Kafka #CYAN
+participant "Service\nClients" as Profil #Wheat
+participant "Service\nCommandes" as Commande #TECHNOLOGY
+participant "Service\nCatalogue" as Catalogue #BUSINESS
+participant "Service\nLignes" as Lignes #Lavender
+participant "Service\nFacturation" as Facturation #IMPLEMENTATION
+participant "Service\nAudit" as Audit #Thistle
+participant "HLR /\nHSS" as HLR
+
+group Identification et authentification
+Abonné -> API : POST /clients/v1/party
+API -> Profil : POST /v1/party
+Profil --> API : [200] {userId}
+API --> Abonné : [200] {userId}
+Abonné -> API : POST /clients/v1/auth
+API -> Profil : PATCH /v1/auth
+Profil --> API : [200] {jwt}
+API --> Abonné : [200] {jwt}
+end group
+
+group 6. Paiement
+Abonné -> API : POST /orchestration/v1/paiement
+API -> Facturation : POST /v1/payments/process
+Facturation --> Kafka : pushPaymentDelinquant
+group Compensation
+Profil --> Kafka : popPaymentDelinquant
+Lignes --> Kafka : popPaymentDelinquant
+Lignes -> HLR : PATCH /deactivate
+Lignes --> Kafka : pushServiceProvisionKo
+Audit --> Kafka : popServiceProvisinoKo
+Profil --> Kafka : popServiceProvisionKo
+Orchestration --> Kafka : popServiceProvisionKo
+Commande --> Kafka : popPaymentDelinquant
+Commande --> Kafka : pushOrderCanceled
+Audit --> Kafka : popOrderCanceled
+Orchestration --> Kafka : popOrderCanceled
+Profil --> Kafka : popOrderCanceled
+Catalogue --> Kafka : popOrderCanceled
+Catalogue --> Kafka : pushStockIncreased
+Orchestration --> Kafka : popStockIncreased
+Orchestration --> Kafka : pushSagaEnded
+end group
+end group
+
+group 7. Fin de la saga
+Audit --> Kafka : popSagaEnded
+Profil --> Kafka : popSagaEnded
+Profil --> Abonné : Notification de commande annulée
+end group
+@enduml

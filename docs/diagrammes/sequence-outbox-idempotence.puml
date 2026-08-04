@@ -1,0 +1,26 @@
+@startuml
+title Patron Outbox (producteur) et Idempotence (consommateur)\npour caractéristique exactly-once
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+participant Producteur as Publisher
+database "Producteur" as OUTBOX
+participant Processeur as OutboxProcessor
+queue "Topic Kafka" as Kafka
+participant "OperationConsommateur" as Consommateur
+database "Consommateur" as IDEM
+note right of Publisher : Transaction atomique garantissant la modification\nau domaine et la préparation de la publication ensemble
+Publisher -> OUTBOX : BEGIN TRANSACTION;\nINSERT INTO domain_table VALUES (...);\nINSERT INTO outbox VALUES ( ..., idempotencyKey, processed=false);\nCOMMIT;
+note left of OutboxProcessor : Polling à intervalle régulier
+OutboxProcessor -> OUTBOX : SELECT FROM outbox WHERE processed = false;
+note left of Kafka : Garantie at-least-once
+OutboxProcessor --> Kafka : pushMessageApproprié
+OutboxProcessor -> OUTBOX : UPDATE outbox SET processed = true;
+Consommateur --> Kafka : popMessageApproprié
+note right of Consommateur : Garantie exactly-once
+group test d'idempotence
+note right of Consommateur : Si la requête ne modifie pas l'état de la base de données,\nle traitement s'arrête ici.
+Consommateur -> IDEM : INSERT INTO idempotency_keys VALUES (idempotencyKey, ..., etat = traitement);
+end group
+Consommateur -> Consommateur : Effectuer le travail
+note right of Consommateur : Le travail en erreur peut être refait pour les oérations qui n'ont\npas abouties et qui laissent l'état de la clé d'idempotence à traitement.
+Consommateur -> IDEM : UPDATE idempotency_keys SET etat = fait;
+@enduml
