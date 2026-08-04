@@ -1,3 +1,5 @@
 svc-*
-__pycache__
-./db-init
+__pycache__/
+.pytest_cache/
+.venv/
+/db-init/

@@ -85,9 +85,9 @@
 							"script": {
 								"exec": [
 									"let body = JSON.parse(pm.request.body.raw || \"{}\");",
-									"body.username = pm.environment.get('username');",
-									"body.password = pm.environment.get('password');",
-									"body.otp = pm.environment.get('otp');",
+									"body.username = pm.environment.get('username') || body.username;",
+									"body.password = pm.environment.get('password') || body.password;",
+									"body.otp = pm.environment.get('otp') || body.otp || '';",
 									"pm.request.body.raw = JSON.stringify(body);",
 									"console.log('Authentification', body);"
 								],
@@ -100,7 +100,10 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									""
+									"const response = pm.response.json();",
+									"pm.expect(response.access_token).to.be.a('string').and.not.empty;",
+									"pm.collectionVariables.set('api_token', response.access_token);",
+									"console.log('Jeton sauvegardé dans la variable de collection api_token');"
 								],
 								"type": "text/javascript",
 								"packages": {},
@@ -1033,7 +1036,7 @@
 	"variable": [
 		{
 			"key": "base_url",
-			"value": ""
+			"value": "http://localhost:8080"
 		},
 		{
 			"key": "clients_url",

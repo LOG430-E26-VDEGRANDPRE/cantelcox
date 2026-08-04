@@ -132,6 +132,7 @@
     {
       "endpoint": "/orchestration/v1/commande",
       "method": "POST",
+      "timeout": "60s",
       "input_headers": ["*"],
       "extra_config": {
         "auth/validator": {
@@ -144,7 +145,7 @@
         {
           "url_pattern": "/v1/saga/order",
           "host": ["http://svc_orchestration:5123"],
-          "timeout": "15s"
+          "timeout": "60s"
         }
       ]
     },

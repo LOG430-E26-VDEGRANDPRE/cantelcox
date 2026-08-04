@@ -10,6 +10,7 @@ services:
       - ./svc-clients/db-init:/db_clients
       - ./svc-commandes/db-init:/db_commandes
       - ./svc-facturation/db-init:/db_facturation
+      - ./svc-orchestration/db-init:/db_orchestration
       - ./svc-facturation/init-scripts:/scripts_facturation
       - ./svc-catalogue/init-scripts:/scripts_catalogue
     command: >
@@ -17,6 +18,7 @@ services:
             cp /db_commandes/init.sql /data/init-commandes.sql;
             cp /db_facturation/init.sql /data/init-facturation.sql;
             cp /db_audit/init.sql /data/init-audit.sql;
+            cp /db_orchestration/init.sql /data/init-orchestration.sql;
             cp /db_facturation/test-data.sql /data/test-facturation.sql;
             cp /scripts_catalogue/* /scripts/;
             cp /scripts_facturation/* /scripts/;"
@@ -92,7 +94,6 @@ services:
       start_period: 10s
 
   krakend:
-    container_name: api-gateway
     image: nginx:latest
     ports:
       - "8080:8080"
@@ -207,15 +208,21 @@ services:
       - prometheus
 
   postgres_kc:
-    image: postgres
+    image: postgres:18
     restart: unless-stopped
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgres
+      - postgres_data:/var/lib/postgresql
     environment:
       - POSTGRES_PASSWORD=cantelcox
       - POSTGRES_USER=keycloak
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak -d keycloak"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
     networks:
       - cantelcox-network
 
