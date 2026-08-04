@@ -28,6 +28,7 @@ jobs:
           ["svc-facturation"]="github.com/LOG430-E26-VDEGRANDPRE/svc-facturation.git"
           ["svc-orchestration"]="github.com/LOG430-E26-VDEGRANDPRE/svc-orchestration.git"
           ["svc-lignes"]="github.com/LOG430-E26-VDEGRANDPRE/svc-lignes.git"
+          ["svc-portability-hub"]="github.com/LOG430-E26-VDEGRANDPRE/svc-portability-hub.git"
         )
 
         for service in "${!REPOS[@]}"; do
@@ -90,13 +91,29 @@ jobs:
         KC_CLIENT_SECRET: ${{ secrets.KC_CLIENT_SECRET }}
       run: |
         # Liste des services à construire
-        SERVICES=("svc-catalogue" "svc-clients" "svc-commandes" "svc-facturation" "svc-orchestration" "svc-lignes")
+        SERVICES=("svc-catalogue" "svc-clients" "svc-commandes" "svc-facturation" "svc-orchestration" "svc-lignes" "svc-portability-hub")
 
         docker network inspect cantelcox-network >/dev/null 2>&1 || docker network create cantelcox-network
 
         for service in "${SERVICES[@]}"; do
           echo "Building $service..."
           cd $service
+
+          # Le portability hub contient trois images Docker (sync, gateway et BSS gateway).
+          if [ "$service" = "svc-portability-hub" ]; then
+            echo "Building Portability Hub images..."
+            docker compose build
+
+            echo "Running Portability Hub Maven tests..."
+            docker run --rm \
+              -v "$PWD:/workspace" \
+              -w /workspace \
+              maven:3.9-eclipse-temurin-21 \
+              mvn --batch-mode test
+
+            cd ..
+            continue
+          fi
 
           # Vérifier si le Dockerfile existe
           if [ -f "Dockerfile" ]; then
@@ -260,6 +277,7 @@ jobs:
           ["svc-facturation"]="github.com/LOG430-E26-VDEGRANDPRE/svc-facturation.git"
           ["svc-orchestration"]="github.com/LOG430-E26-VDEGRANDPRE/svc-orchestration.git"
           ["svc-lignes"]="github.com/LOG430-E26-VDEGRANDPRE/svc-lignes.git"
+          ["svc-portability-hub"]="github.com/LOG430-E26-VDEGRANDPRE/svc-portability-hub.git"
         )
 
         for service in "${!REPOS[@]}"; do
