@@ -1,0 +1,64 @@
+@startuml
+skinparam componentStyle uml2
+skinparam backgroundColor #F5F9F5
+skinparam defaultFontName Arial
+
+skinparam package {
+    BackgroundColor White
+    BorderColor #2D6A8E
+    BorderThickness 1.5
+    FontStyle bold
+}
+
+skinparam component {
+    BackgroundColor White
+    BorderColor #2D6A8E
+    BorderThickness 1
+}
+
+skinparam arrowColor #9E2A3A
+
+skinparam linetype polyline
+
+title Architecture Hexagonale - svc-clients
+
+package "Adapteurs d'entrée" as AdapteurE  {
+    component "API REST (Flask)\n(UserController, AuthController)" as WebController
+    component "Kafka Consumer\n(Messaging)" as EventConsumer
+}
+
+package "Application (Services)" as App {
+    component "UserService\n(Create, Get, Delete, Validate)" as UserService
+    component "AuthenticationService\n(Authenticate)" as AuthService
+}
+
+package "Domaine (cœur pur)" as Domaine #D5E8D4 {
+    component "User" as User
+}
+
+package "Adapters de sortie" as AdaptesO {
+    component "SQLAlchemy Adapter\n(MySQL Persistence + Outbox)" as SQLAdapter
+    component "Identity Provider Adapter\n(ex: Auth0 / IAM / Keycloak)" as IdPAdapter
+    component "Kafka Publisher\n(kafka_producer)" as KafkaPublisher
+}
+
+' --- Relations Adapteurs In (Synchrone) -> App ---
+WebController --> UserService : POST, GET, DELETE /users
+WebController --> AuthService : POST /login (auth)
+
+' --- Relations Adapteurs In (Événementiel) -> App ---
+EventConsumer --> UserService : OrderDraft\n(Déclenche 'validate_user' pour Saga)
+EventConsumer --> UserService : Fraude, Abus, PaymentDelinquant...\n(Action sur le compte client)
+
+' --- Relations App -> Domaine ---
+UserService .down.> User : Instancie, Valide, Modifie
+
+' --- Relations App -> Adapteurs de sortie ---
+UserService --> SQLAdapter : CRUD Utilisateur
+UserService --> IdPAdapter : create/delete_identity
+AuthService --> IdPAdapter : authenticate
+
+UserService --> SQLAdapter : Sauvegarde événement (Outbox)
+UserService --> KafkaPublisher : Publie événements métier
+
+@enduml
