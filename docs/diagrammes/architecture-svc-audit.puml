@@ -37,6 +37,7 @@ package "Domaine (cœur pur)" as Domaine #D5E8D4 {
 
 package "Adapters de sortie" as AdaptesO {
     component "SQLAlchemy Adapter\n(MySQL Persistence + Outbox)" as SQLAdapter
+    component "SQLAlchemy Adapter\n(idempotency)" as SQLAdapter2
     component "Kafka Publisher\n(kafka_producer)" as KafkaPublisher
 }
 
@@ -49,6 +50,8 @@ AuditService .down.> AuditEvent : Instancie une trace immuable
 
 ' --- Relations App -> Adapteurs de sortie ---
 AuditService --> SQLAdapter : Sauvegarde l'événement (DAO + Outbox)
+AuditService --> SQLAdapter2 : Exactly once
+AuditEvent <.right. SQLAdapter
 AuditService --> KafkaPublisher : Publie alerte/synthèse (via Outbox)
 
 @enduml
