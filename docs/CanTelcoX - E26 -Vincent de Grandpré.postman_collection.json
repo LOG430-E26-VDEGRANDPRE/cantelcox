@@ -84,12 +84,7 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"let body = JSON.parse(pm.request.body.raw || \"{}\");",
-									"body.username = pm.environment.get('username') || body.username;",
-									"body.password = pm.environment.get('password') || body.password;",
-									"body.otp = pm.environment.get('otp') || body.otp || '';",
-									"pm.request.body.raw = JSON.stringify(body);",
-									"console.log('Authentification', body);"
+									""
 								],
 								"type": "text/javascript",
 								"packages": {},
@@ -100,10 +95,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"const response = pm.response.json();",
-									"pm.expect(response.access_token).to.be.a('string').and.not.empty;",
-									"pm.collectionVariables.set('api_token', response.access_token);",
-									"console.log('Jeton sauvegardé dans la variable de collection api_token');"
+									""
 								],
 								"type": "text/javascript",
 								"packages": {},
@@ -148,7 +140,7 @@
 								"{{clients_url}}"
 							],
 							"path": [
-								"health-check"
+								"health"
 							]
 						}
 					},
@@ -268,7 +260,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"user_id\": 2,\n    \"items\": [\n        {\"productOfferingRef\": \"SMGA54\", \"quantity\": 4, \"description\": \"Téléphone\"},\n        {\"productOfferingRef\": \"MOB001\", \"quantity\": 1, \"description\": \"Ligne de service mobile\", \"numero\": \"5145855993\"}\n    ],\n    \"idempotency_key\": \"1\"\n}",
+							"raw": "{\n    \"user_id\": 2,\n    \"items\": [\n        {\"productOfferingRef\": \"SMGA54\", \"quantity\": 4, \"description\": \"Téléphone\"},\n        {\"productOfferingRef\": \"MOB001\", \"quantity\": 1, \"description\": \"Ligne de service mobile\", \"numero\": \"4383806811\"}\n    ],\n    \"idempotency_key\": \"OeSwWo1F4ZFMS9JfOYFRMQK4LKe0\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1036,7 +1028,7 @@
 	"variable": [
 		{
 			"key": "base_url",
-			"value": "http://localhost:8080"
+			"value": ""
 		},
 		{
 			"key": "clients_url",
