@@ -286,6 +286,7 @@ jobs:
           ["svc-orchestration"]="github.com/LOG430-E26-VDEGRANDPRE/svc-orchestration.git"
           ["svc-lignes"]="github.com/LOG430-E26-VDEGRANDPRE/svc-lignes.git"
           ["svc-portability-hub"]="github.com/LOG430-E26-VDEGRANDPRE/svc-portability-hub.git"
+          ["svc-audit"]="github.com/LOG430-E26-VDEGRANDPRE/svc-audit.git"
         )
 
         for service in "${!REPOS[@]}"; do
