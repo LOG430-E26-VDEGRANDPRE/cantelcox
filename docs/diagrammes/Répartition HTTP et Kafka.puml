@@ -1,0 +1,21 @@
+@startuml
+title Répartition HTTP et Kafka
+
+actor Client
+component "API Gateway" as Gateway
+component "svc-commandes #1" as C1
+component "svc-commandes #2" as C2
+queue "Kafka\n4 partitions" as Kafka
+
+Client -> Gateway
+Gateway --> C1 : requêtes REST
+Gateway --> C2 : requêtes REST
+
+Kafka --> C1 : partitions 0 et 2
+Kafka --> C2 : partitions 1 et 3
+
+note bottom of C1
+Même consumer group
+svc-commandes
+end note
+@enduml

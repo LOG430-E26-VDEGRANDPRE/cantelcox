@@ -1,0 +1,26 @@
+@startuml
+title Chaîne de traçage distribuée
+
+actor Client
+component "API Gateway\nKrakenD" as Gateway
+component "svc-orchestration" as Orchestration
+queue "Kafka" as Kafka
+component "svc-commandes" as Commandes
+component "svc-lignes" as Lignes
+component "OpenTelemetry\nCollector" as Collector
+component "Jaeger" as Jaeger
+
+Client -> Gateway : POST /v1/order-sagas\ntraceparent
+Gateway -> Orchestration : Requête REST\nmême traceId
+Orchestration -> Kafka : Publication OrderSagaSubmitted\ntraceparent dans les headers
+Kafka -> Commandes : Consommation\nnouveau span enfant
+Commandes -> Kafka : Publication OrderCreated
+Kafka -> Lignes : Consommation\nmême traceId
+
+Gateway ..> Collector : export spans
+Orchestration ..> Collector : export spans
+Commandes ..> Collector : export spans
+Lignes ..> Collector : export spans
+Collector -> Jaeger : export OTLP
+
+@enduml
