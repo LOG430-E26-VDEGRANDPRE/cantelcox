@@ -1,0 +1,148 @@
+
+@startuml
+title
+Vue d'ensemble: services + broker
+endtitle
+header CanTelcoX - DEGV03078209 - ÉTS - LOG430 - E26
+
+' skinparam linetype ortho
+
+skinparam component {
+BackgroundColor #RoyalBlue
+FontColor #GhostWhite
+}
+skinparam component<<service>> {
+BackgroundColor #MOTIVATION
+FontColor #Black
+}
+actor Usager
+cloud Internet
+component "API Gateway" as API
+
+together {
+  [Commandes] as CmdE <<Service>>
+  [Clients] as CliE <<Service>>
+  [Lignes] as LigE <<Service>>
+  [Facturation] as FacE <<Service>>
+  [Catalogue] as CatE <<Service>>
+  [Audit] as AudE <<Service>>
+  [Chorégraphie] as ChorE <<Service>>
+}
+
+node "Message Broker (Kafka)" {
+  queue "Topic\nCommandes" as TopicCommandes
+  queue "Topic\nLignes" as TopicLignes
+  queue "Topic\nClients" as TopicClients
+  queue "Topic\nFacturation" as TopicFacturation
+  queue "Topic\nAudit" as TopicAudit
+  queue "Topic\nCatalogue" as TopicCatalogue
+  queue "Topic\nSaga" as TopicChoregraphie
+}
+
+Usager --> Internet : utilise
+Internet -- API : IP publique
+
+API ----> FacE : facturation mensuelle\nconsultation
+API ----> CliE : profil, identité\n et authentification
+API ----> LigE : consultation\n des usages
+API ----> CatE : consultation des\n offres de produit
+API ----> AudE : consultation\n des événements
+API ----> CmdE : prise de commande\nconsultation
+API ----> ChorE : déclenchement\n de saga
+
+CmdE -down--> TopicCommandes : publie à
+CliE -down--> TopicClients : publie à
+LigE -down--> TopicLignes : publie à
+FacE -down--> TopicFacturation : publie à
+AudE -down--> TopicAudit : publie à
+CatE -down--> TopicCatalogue : publie à
+ChorE -down--> TopicChoregraphie : publie à
+
+together{
+    ' 1. Commandes
+    rectangle "Consommateurs\nCommandes" {
+        [Clients] as Cli1 <<Service>>
+        [Lignes] as Lig1 <<Service>>
+        [Audit] as Aud1 <<Service>>
+        [Catalogue] as Cat1 <<Service>>
+        [Chorégraphie] as Chor1 <<Service>>
+
+        Cli1 -[hidden]down->Lig1
+        Lig1 -[hidden]down->Aud1
+        Aud1 -[hidden]down->Cat1
+        Cat1 -[hidden]down->Chor1
+    }
+
+    ' 2. Clients
+    rectangle "Consommateurs\nClients" {
+        [Audit] as Aud2 <<Service>>
+        [Chorégraphie] as Chor2 <<Service>>
+
+        Aud2 -[hidden]down->Chor2
+    }
+
+    ' 3. Lignes
+    rectangle "Consommateurs\nLignes" {
+        [Audit] as Aud3 <<Service>>
+        [Clients] as Cli3 <<Service>>
+        [Chorégraphie] as Chor3 <<Service>>
+
+        Cli3 -[hidden]down->Aud3
+        Aud3 -[hidden]down->Chor3
+    }
+
+    ' 4. Facturation
+    rectangle "Consommateurs\nFacturation" {
+        [Audit] as Aud4 <<Service>>
+        [Clients] as Cli4 <<Service>>
+        [Commandes] as Cmd4 <<Service>>
+        [Lignes] as Lig4 <<Service>>
+        [Chorégraphie] as Chor4 <<Service>>
+
+        Cmd4 -[hidden]down->Cli4
+        Cli4 -[hidden]down->Lig4
+        Lig4 -[hidden]down->Aud4
+        Aud4 -[hidden]down->Chor4
+    }
+
+    ' 5. Audit
+    rectangle "Consommateurs\nAudit" {
+        [Clients] as Cli5 <<Service>>
+        [Facturation] as Fac5 <<Service>>
+        [Lignes] as Lig5 <<Service>>
+        [Chorégraphie] as Chor5 <<Service>>
+
+        Lig5 -[hidden]down->Cli5
+        Cli5 -[hidden]down->Fac5
+        Fac5 -[hidden]down->Chor5
+    }
+
+    ' 6. Catalogue
+    rectangle "Consommateurs\nCatalogue" {
+        [Chorégraphie] as Chor6 <<Service>>
+    }
+
+    ' 7. Saga
+    rectangle "Consommateurs\nChorégraphie" {
+        [Audit] as Aud7 <<Service>>
+        [Clients] as Cli7 <<Service>>
+        [Commandes] as Cmd7 <<Service>>
+        [Facturation] as Fac7 <<Service>>
+        [Lignes] as Lig7 <<Service>>
+
+        Cmd7 -[hidden]down->Lig7
+        Lig7 -[hidden]down->Cli7
+        Cli7 -[hidden]down->Fac7
+        Fac7 -[hidden]down->Aud7
+
+    }
+}
+TopicCommandes -down--> "Consommateurs\nCommandes" : consommé par
+TopicClients -down-> "Consommateurs\nClients" : consommé par
+TopicLignes -down-> "Consommateurs\nLignes" : consommé par
+TopicFacturation -down-> "Consommateurs\nFacturation" : consommé par
+TopicAudit -down-> "Consommateurs\nAudit" : consommé par
+TopicCatalogue -down-> "Consommateurs\nCatalogue" : consommé par
+TopicChoregraphie -down-> "Consommateurs\nChorégraphie" : consommé par
+
+@enduml

@@ -1,0 +1,57 @@
+@startuml
+skinparam componentStyle uml2
+skinparam backgroundColor #F5F9F5
+skinparam defaultFontName Arial
+
+skinparam package {
+    BackgroundColor White
+    BorderColor #2D6A8E
+    BorderThickness 1.5
+    FontStyle bold
+}
+
+skinparam component {
+    BackgroundColor White
+    BorderColor #2D6A8E
+    BorderThickness 1
+}
+
+skinparam arrowColor #9E2A3A
+
+skinparam linetype polyline
+
+title Architecture Hexagonale - svc-audit (100% Événementiel)
+
+package "Adapteurs d'entrée" as AdapteurE  {
+    component "Kafka Consumer\n(Messaging)" as EventConsumer
+}
+
+package "Application (Cas d'utilisation)" as App {
+    component "Event Handlers\n(OrderCreated, PaymentProcessed...)" as EventHandlers
+    component "AuditEventProducer\n(Service d'audit)" as AuditService
+}
+
+package "Domaine (cœur pur)" as Domaine #D5E8D4 {
+    component "AuditEvent\n(Record de traçabilité)" as AuditEvent
+}
+
+package "Adapters de sortie" as AdaptesO {
+    component "SQLAlchemy Adapter\n(MySQL Persistence + Outbox)" as SQLAdapter
+    component "SQLAlchemy Adapter\n(idempotency)" as SQLAdapter2
+    component "Kafka Publisher\n(kafka_producer)" as KafkaPublisher
+}
+
+' --- Relations Adapteurs In (Événementiel) -> App ---
+EventConsumer --> EventHandlers : Écoute globale des topics\n(Saga, Facturation, Clients, Lignes, etc.)
+
+' --- Relations App -> Domaine ---
+EventHandlers --> AuditService : Transfère le contexte
+AuditService .down.> AuditEvent : Instancie une trace immuable
+
+' --- Relations App -> Adapteurs de sortie ---
+AuditService --> SQLAdapter : Sauvegarde l'événement (DAO + Outbox)
+AuditService --> SQLAdapter2 : Exactly once
+AuditEvent <.right. SQLAdapter
+AuditService --> KafkaPublisher : Publie alerte/synthèse (via Outbox)
+
+@enduml
