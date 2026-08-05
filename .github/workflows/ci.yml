@@ -123,7 +123,9 @@ jobs:
             # Configurer les variables d'environnement pour chaque service
 
             # Copie simple pour démonstrateur sans avoir à gérer les secrets GitHub
-            cp .env.example .env
+            if [[ -f "$service/.env.example" ]]; then
+              cp "$service/.env.example" "$service/.env"
+            fi
 
             # case $service in
             #   "svc-catalogue")
@@ -295,7 +297,9 @@ jobs:
           # Configurer les variables d'environnement pour chaque service
 
           # Copie simple pour démonstrateur sans avoir à gérer les secrets GitHub
-          cp .env.example .env
+          if [[ -f "$service/.env.example" ]]; then
+            cp "$service/.env.example" "$service/.env"
+          fi
 
           # case $service in
           #   "svc-catalogue")
